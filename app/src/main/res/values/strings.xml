@@ -12,4 +12,9 @@
     <string name="already_have_an_account_sign_in">Already have an account? Sign in</string>
     <string name="password_error">Password must be at least 6 character</string>
     <string name="empty_edittext">required</string>
+    <string name="home">HOME</string>
+    <string name="profile">PROFILE</string>
+    <string name="booking">BOOKING</string>
+    <string name="map">MAP</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

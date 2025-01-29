@@ -7,4 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_bottom_nav_bar"
+        app:itemActiveIndicatorStyle="@android:color/transparent"
+        app:itemTextColor="@drawable/nav_on_select_color"
+        app:itemIconTint="@drawable/nav_on_select_color"
+        />
+
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
