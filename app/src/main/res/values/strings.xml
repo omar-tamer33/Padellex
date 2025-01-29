@@ -7,4 +7,9 @@
     <string name="forget_your_password">Forget your password</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
     <string name="error">You have entered an invalid username or password</string>
+    <string name="register">REGISTER</string>
+    <string name="signup">SIGNUP</string>
+    <string name="already_have_an_account_sign_in">Already have an account? Sign in</string>
+    <string name="password_error">Password must be at least 6 character</string>
+    <string name="empty_edittext">required</string>
 </resources>
