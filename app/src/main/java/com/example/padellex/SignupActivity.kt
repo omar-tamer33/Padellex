@@ -1,20 +1,72 @@
 package com.example.padellex
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.padellex.databinding.ActivitySignupBinding
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 class SignupActivity : AppCompatActivity() {
+    lateinit var auth : FirebaseAuth
+    lateinit var binding: ActivitySignupBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_signup)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivitySignupBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        auth = Firebase.auth
+
+        binding.signupBtn.setOnClickListener {
+            userRegister()
         }
+
+        binding.loginTv.setOnClickListener{
+            navigateToLogin()
+        }
+
+    }
+
+    private fun userRegister() {
+        val email = binding.emailEt.text.toString()
+        val password = binding.passwordEt.text.toString()
+        if (password.length < 6) {
+            binding.passwordLayout.error = getString(R.string.password_error)
+        } else {
+            binding.passwordLayout.error = null
+            if (email.isNotBlank() && password.isNotBlank()) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        auth.createUserWithEmailAndPassword(email, password).await()
+                        navigateToLogin()
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@SignupActivity, e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                }
+            }else{
+                binding.passwordLayout.error = getString(R.string.empty_edittext)
+                binding.emailLayout.error = getString(R.string.empty_edittext)
+            }
+        }
+    }
+
+    private fun navigateToLogin(){
+        val intent = Intent(this,LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

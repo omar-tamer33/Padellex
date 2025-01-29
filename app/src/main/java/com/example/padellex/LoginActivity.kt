@@ -32,6 +32,12 @@ class LoginActivity : AppCompatActivity() {
             userLoginWithEmailAndPassword()
         }
 
+        binding.signupTv.setOnClickListener{
+            val intent = Intent(this,SignupActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     override fun onStart() {
@@ -42,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
     private fun checkUserLoginState() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            val intent = Intent(this,SignupActivity::class.java)
+            val intent = Intent(this,HomeActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -58,11 +64,14 @@ class LoginActivity : AppCompatActivity() {
                     checkUserLoginState()
                 }catch (e: Exception){
                     withContext(Dispatchers.Main){
-                        binding.email.error = getString(R.string.error)
-                        binding.password.error = getString(R.string.error)
+                        binding.emailLayout.error = getString(R.string.error)
+                        binding.passwordLayout.error = getString(R.string.error)
                     }
                 }
             }
+        }else{
+            binding.passwordLayout.error = getString(R.string.empty_edittext)
+            binding.emailLayout.error = getString(R.string.empty_edittext)
         }
     }
 }
