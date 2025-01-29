@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "194761364572",
+    "project_id": "padellex",
+    "storage_bucket": "padellex.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194761364572:android:2e7c6b6a5a15a31e650299",
+        "android_client_info": {
+          "package_name": "com.example.padellex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZhPAt8J-Tl36gX_-WVJpRM6byuJbbC4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
