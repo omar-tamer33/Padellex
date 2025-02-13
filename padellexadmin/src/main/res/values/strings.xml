@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Padellex Admin</string>
+    <string name="padellex">Padellex</string>
+    <string name="login">LOGIN</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_your_password">Forget your password</string>
+    <string name="empty_edittext">required</string>
+    <string name="error">You have entered an invalid username or password</string>
+
+</resources>

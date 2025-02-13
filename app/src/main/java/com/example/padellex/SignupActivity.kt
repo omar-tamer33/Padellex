@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.padellex.databinding.ActivitySignupBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,14 +42,21 @@ class SignupActivity : AppCompatActivity() {
     private fun userRegister() {
         val email = binding.emailEt.text.toString()
         val password = binding.passwordEt.text.toString()
+        val firstName = binding.firstNameEt.text.toString()
+        val lastName = binding.lastNameEt.text.toString()
         if (password.length < 6) {
             binding.passwordLayout.error = getString(R.string.password_error)
         } else {
             binding.passwordLayout.error = null
-            if (email.isNotBlank() && password.isNotBlank()) {
+            if (email.isNotBlank() && password.isNotBlank() && firstName.isNotBlank() && lastName.isNotBlank()) {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         auth.createUserWithEmailAndPassword(email, password).await()
+                        val user = auth.currentUser
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName("$firstName $lastName")
+                            .build()
+                        user?.updateProfile(profileUpdates)
                         navigateToLogin()
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
@@ -60,6 +68,8 @@ class SignupActivity : AppCompatActivity() {
             }else{
                 binding.passwordLayout.error = getString(R.string.empty_edittext)
                 binding.emailLayout.error = getString(R.string.empty_edittext)
+                binding.firstNameLayout.error = getString(R.string.empty_edittext)
+                binding.lastNameLayout.error = getString(R.string.empty_edittext)
             }
         }
     }
