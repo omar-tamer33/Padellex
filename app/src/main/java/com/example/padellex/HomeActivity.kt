@@ -3,6 +3,7 @@ package com.example.padellex
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.padellex.Fragments.BookingFragment
 import com.example.padellex.Fragments.ProfileFragment
 import com.example.padellex.databinding.ActivityHomeBinding
 
@@ -16,6 +17,7 @@ class HomeActivity : AppCompatActivity() {
         binding.bottomNavBar.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.profile -> changeFragment(ProfileFragment())
+                R.id.booking -> changeFragment(BookingFragment())
             }
             true
         }
