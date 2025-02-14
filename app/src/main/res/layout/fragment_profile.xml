@@ -2,7 +2,57 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImage"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        app:civ_border_width="2dp"
+        android:src="@drawable/blank_profile_picture"
+        app:civ_border_color="@color/Blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/userNameTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/profileImage"
+        app:layout_constraintTop_toTopOf="@id/profileImage"
+        app:layout_constraintBottom_toBottomOf="@id/profileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="omar tamer"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/userPhoneEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/userNameTv"
+        app:layout_constraintEnd_toEndOf="@id/userNameTv"
+        app:layout_constraintTop_toBottomOf="@id/userNameTv"
+        tools:text="01016575535"
+        android:textColor="@color/gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="save"
+        app:layout_constraintTop_toBottomOf="@id/userPhoneEt"
+        app:layout_constraintStart_toStartOf="@id/userPhoneEt"
+        app:layout_constraintEnd_toEndOf="@id/userPhoneEt"
+        />
 
     <Button
         android:id="@+id/signoutBtn"

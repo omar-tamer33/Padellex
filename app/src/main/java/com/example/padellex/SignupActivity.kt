@@ -10,8 +10,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.padellex.databinding.ActivitySignupBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +25,13 @@ import java.lang.Exception
 class SignupActivity : AppCompatActivity() {
     lateinit var auth : FirebaseAuth
     lateinit var binding: ActivitySignupBinding
+    lateinit var databaseReference : DatabaseReference
+    lateinit var email : String
+    lateinit var password : String
+    lateinit var firstName : String
+    lateinit var lastName : String
+    lateinit var phone : String
+    var user : FirebaseUser? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
@@ -40,27 +50,31 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun userRegister() {
-        val email = binding.emailEt.text.toString()
-        val password = binding.passwordEt.text.toString()
-        val firstName = binding.firstNameEt.text.toString()
-        val lastName = binding.lastNameEt.text.toString()
+         email = binding.emailEt.text.toString()
+         password = binding.passwordEt.text.toString()
+         firstName = binding.firstNameEt.text.toString()
+         lastName = binding.lastNameEt.text.toString()
+         phone = binding.phoneEt.text.toString()
         if (password.length < 6) {
             binding.passwordLayout.error = getString(R.string.password_error)
         } else {
             binding.passwordLayout.error = null
-            if (email.isNotBlank() && password.isNotBlank() && firstName.isNotBlank() && lastName.isNotBlank()) {
+            if (email.isNotBlank() && password.isNotBlank() && firstName.isNotBlank() && lastName.isNotBlank() && phone.isNotBlank()) {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         auth.createUserWithEmailAndPassword(email, password).await()
-                        val user = auth.currentUser
+                        user = auth.currentUser
                         val profileUpdates = UserProfileChangeRequest.Builder()
                             .setDisplayName("$firstName $lastName")
                             .build()
                         user?.updateProfile(profileUpdates)
-                        navigateToLogin()
+                        withContext(Dispatchers.Main) {
+                            saveUserInfoInDatabase(user?.uid,firstName,lastName,phone)
+                            navigateToLogin()
+                        }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(this@SignupActivity, e.message, Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@SignupActivity,"${e.message}", Toast.LENGTH_LONG).show()
                         }
                     }
 
@@ -70,6 +84,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.emailLayout.error = getString(R.string.empty_edittext)
                 binding.firstNameLayout.error = getString(R.string.empty_edittext)
                 binding.lastNameLayout.error = getString(R.string.empty_edittext)
+                binding.phoneLayout.error = getString(R.string.empty_edittext)
             }
         }
     }
@@ -78,5 +93,16 @@ class SignupActivity : AppCompatActivity() {
         val intent = Intent(this,LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun saveUserInfoInDatabase(id : String? , firstName : String?,lastName : String? , phone : String?){
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users Information")
+        val userInfo = UserInfo(id = id, firstName = firstName, lastName = lastName, phone =phone)
+        databaseReference.child(userInfo.id.toString()).setValue(userInfo).addOnSuccessListener {
+            Toast.makeText(this,"success",Toast.LENGTH_LONG).show()
+        }.addOnFailureListener {
+            Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show()
+
+        }
     }
 }
