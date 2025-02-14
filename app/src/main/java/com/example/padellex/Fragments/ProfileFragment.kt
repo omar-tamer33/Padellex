@@ -151,6 +151,7 @@ class ProfileFragment : Fragment() {
                 val phone = snapshot.child("phone").getValue(String::class.java)
                 val imageUrl = snapshot.child("image").getValue(String::class.java)
 
+                binding.userEmailTv.text = user.email.toString()
                 binding.userNameTv.text = "$firstName $lastName"
                 binding.userPhoneEt.setText(phone)
 
