@@ -31,13 +31,27 @@
         android:textStyle="bold"
         />
 
+    <TextView
+        android:id="@+id/userEmailTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/userNameTv"
+        app:layout_constraintTop_toBottomOf="@id/userNameTv"
+        app:layout_constraintBottom_toTopOf="@id/userPhoneEt"
+        app:layout_constraintEnd_toEndOf="@id/userNameTv"
+        tools:text="omartamer@gmail.com"
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        />
+
     <EditText
         android:id="@+id/userPhoneEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/userNameTv"
-        app:layout_constraintEnd_toEndOf="@id/userNameTv"
-        app:layout_constraintTop_toBottomOf="@id/userNameTv"
+        app:layout_constraintStart_toStartOf="@id/userEmailTv"
+        app:layout_constraintEnd_toEndOf="@id/userEmailTv"
+        app:layout_constraintTop_toBottomOf="@id/userEmailTv"
+        app:layout_constraintBottom_toTopOf="@id/saveBtn"
         tools:text="01016575535"
         android:textColor="@color/gray"
         android:textSize="26sp"
