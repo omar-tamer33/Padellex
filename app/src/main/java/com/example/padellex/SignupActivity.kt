@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.padellex.Dao.UsersDao
 import com.example.padellex.databinding.ActivitySignupBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +26,8 @@ import java.lang.Exception
 class SignupActivity : AppCompatActivity() {
     lateinit var auth : FirebaseAuth
     lateinit var binding: ActivitySignupBinding
-    lateinit var databaseReference : DatabaseReference
+    val databaseReference = FirebaseDatabase.getInstance()
+    val usersDao = UsersDao(databaseReference)
     lateinit var email : String
     lateinit var password : String
     lateinit var firstName : String
@@ -95,14 +97,15 @@ class SignupActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun saveUserInfoInDatabase(id : String? , firstName : String?,lastName : String? , phone : String?){
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users Information")
+    private fun saveUserInfoInDatabase(id : String? , firstName : String,lastName : String , phone : String){
         val userInfo = UserInfo(id = id, firstName = firstName, lastName = lastName, phone =phone)
-        databaseReference.child(userInfo.id.toString()).setValue(userInfo).addOnSuccessListener {
-            Toast.makeText(this,"success",Toast.LENGTH_LONG).show()
-        }.addOnFailureListener {
-            Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show()
+       usersDao.addUser(userInfo){ success ->
+           if (success){
+               Toast.makeText(this,"Register completed",Toast.LENGTH_LONG).show()
+           }else{
+               Toast.makeText(this,"Register failed",Toast.LENGTH_LONG).show()
 
-        }
+           }
+       }
     }
 }

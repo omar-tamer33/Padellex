@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.padellex.CourtItem
+import com.example.padellex.Dao.UsersDao
 import com.example.padellex.LoginActivity
 import com.example.padellex.R
 import com.example.padellex.UserInfo
@@ -44,6 +45,8 @@ class ProfileFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
     val auth = Firebase.auth
     val user = auth.currentUser
+    val databaseReference = FirebaseDatabase.getInstance()
+    val usersDao = UsersDao(databaseReference)
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             uploadImage(uri)
@@ -142,14 +145,12 @@ class ProfileFragment : Fragment() {
 
     private fun getUserInformation() {
         val userId = user?.uid ?: return
-        val databaseRef = FirebaseDatabase.getInstance().getReference("Users Information").child(userId)
-
-        databaseRef.get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                val firstName = snapshot.child("firstName").getValue(String::class.java)
-                val lastName = snapshot.child("lastName").getValue(String::class.java)
-                val phone = snapshot.child("phone").getValue(String::class.java)
-                val imageUrl = snapshot.child("image").getValue(String::class.java)
+        usersDao.getUser(userId){ userInfo ->
+            userInfo?.let {
+                val firstName = userInfo.firstName
+                val lastName = userInfo.lastName
+                val phone = userInfo.phone
+                val imageUrl = userInfo.image
 
                 binding.userEmailTv.text = user.email.toString()
                 binding.userNameTv.text = "$firstName $lastName"
@@ -159,25 +160,21 @@ class ProfileFragment : Fragment() {
                     .load(imageUrl)
                     .placeholder(R.drawable.blank_profile_picture)
                     .into(binding.profileImage)
-            } else {
-                Toast.makeText(requireContext(), "User data not found", Toast.LENGTH_SHORT).show()
+            } ?: run {
+                Toast.makeText(requireContext(), "Failed to retrieve user info", Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Failed to retrieve user info", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun updateUserInformation(){
-        try {
             val phone = binding.userPhoneEt.text.toString()
             val userId = user?.uid ?: return
-            val snapShot =
-                FirebaseDatabase.getInstance().getReference("Users Information").child(userId)
-                    .child("phone")
-            snapShot.setValue(phone)
-            Toast.makeText(requireContext(),"your information updated successfully",Toast.LENGTH_LONG).show()
-        }catch (e:Exception){
-            Toast.makeText(requireContext(),"Failed to update information!",Toast.LENGTH_LONG).show()
+        usersDao.updateUserPhone(userId,phone){ success ->
+            if (success){
+                Toast.makeText(requireContext(),"your information updated successfully",Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(requireContext(),"Failed to update information!",Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
