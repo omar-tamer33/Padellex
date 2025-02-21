@@ -27,6 +27,26 @@ class UsersDao(db : FirebaseDatabase) {
         }
     }
 
+    fun getUserPublicId(id : String , onComplete: (String?) -> Unit){
+        userRef.child(id).child("publicId").get().addOnSuccessListener { snapShot ->
+            val publicId = snapShot.getValue(String::class.java)
+            onComplete(publicId)
+        }.addOnFailureListener {
+            onComplete(null)
+        }
+    }
+
+    fun updateUserImage(id : String , imageUrl : String , publicId : String , onComplete: (Boolean) -> Unit){
+        val updates = mapOf(
+            "imageUrl" to imageUrl,
+            "publicId" to publicId
+        )
+
+        userRef.child(id).updateChildren(updates)
+            .addOnSuccessListener { onComplete(true) }
+            .addOnFailureListener { onComplete(false) }
+    }
+
      fun updateUserPhone(id : String ,newPhone : String , onComplete: (Boolean) -> Unit){
         userRef.child(id).child("phone").setValue(newPhone).addOnSuccessListener {
             onComplete(true)

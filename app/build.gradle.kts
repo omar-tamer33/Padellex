@@ -47,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.cloudinary.android)
     implementation(libs.glide)
     implementation(libs.circleimageview)
     implementation(libs.play.services.maps)
