@@ -1,14 +1,11 @@
 package com.example.padellex.Fragments
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,33 +17,29 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.example.padellex.CourtItem
+import com.cloudinary.Cloudinary
+import com.cloudinary.utils.ObjectUtils
 import com.example.padellex.Dao.UsersDao
 import com.example.padellex.LoginActivity
 import com.example.padellex.R
-import com.example.padellex.UserInfo
 import com.example.padellex.databinding.FragmentProfileBinding
 import com.google.firebase.Firebase
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.tasks.await
+
 
 class ProfileFragment : Fragment() {
+    lateinit var binding: FragmentProfileBinding
+    val auth = Firebase.auth
+    val user = auth.currentUser
+    var cloudinary : Cloudinary? = null
+    val databaseReference = FirebaseDatabase.getInstance()
+    val usersDao = UsersDao(databaseReference)
     private val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_IMAGES
     } else {
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
-    lateinit var binding: FragmentProfileBinding
-    val auth = Firebase.auth
-    val user = auth.currentUser
-    val databaseReference = FirebaseDatabase.getInstance()
-    val usersDao = UsersDao(databaseReference)
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             uploadImage(uri)
@@ -77,6 +70,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initCloudinary()
        getUserInformation()
 
         binding.saveBtn.setOnClickListener {
@@ -121,10 +115,43 @@ class ProfileFragment : Fragment() {
     }
 
     private fun uploadImage(uri: Uri) {
-        val profileUpdates = UserProfileChangeRequest.Builder().setPhotoUri(uri).build()
-        user?.updateProfile(profileUpdates)?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                binding.profileImage.setImageURI(uri)
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        val userId = user?.uid.toString()
+        Thread {
+            try {
+                val result = cloudinary?.uploader()?.upload(inputStream, ObjectUtils.emptyMap())
+                val imageUrl = result?.get("secure_url") as String
+                val publicId = result.get("public_id") as String
+                deleteOldImage(userId)
+                usersDao.updateUserImage(userId,imageUrl,publicId){ success ->
+                    requireActivity().runOnUiThread{
+                    if (success){
+                        Toast.makeText(requireContext(),"Image added successfully",Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(requireContext(),"Failed to upload image",Toast.LENGTH_LONG).show()
+                    }
+                        }
+                }
+                requireActivity().runOnUiThread {
+                    Glide.with(this).load(imageUrl).placeholder(R.drawable.blank_profile_picture).into(binding.profileImage)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }.start()
+    }
+
+    private fun deleteOldImage(userId : String){
+        usersDao.getUserPublicId(userId){ publicId ->
+            if (publicId != null){
+                Thread {
+                    try {
+                        val options = mapOf("resource_type" to "image")
+                        cloudinary?.uploader()?.destroy(publicId, options)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }.start()
             }
         }
     }
@@ -150,7 +177,7 @@ class ProfileFragment : Fragment() {
                 val firstName = userInfo.firstName
                 val lastName = userInfo.lastName
                 val phone = userInfo.phone
-                val imageUrl = userInfo.image
+                val imageUrl = userInfo.imageUrl
 
                 binding.userEmailTv.text = user.email.toString()
                 binding.userNameTv.text = "$firstName $lastName"
@@ -176,5 +203,15 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(),"Failed to update information!",Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun initCloudinary() {
+        val config = mapOf(
+            "cloud_name" to "dey9cixgd",
+            "api_key" to "977563911513672",
+            "api_secret" to "2vlkcLII2snvnmwnd9w8mJwAoVM"
+        )
+
+        cloudinary = Cloudinary(config)
     }
 }
