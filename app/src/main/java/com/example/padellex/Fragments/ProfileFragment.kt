@@ -26,13 +26,16 @@ import com.example.padellex.databinding.FragmentProfileBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ProfileFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
     val auth = Firebase.auth
     val user = auth.currentUser
-    var cloudinary : Cloudinary? = null
+    lateinit var cloudinary : Cloudinary
     val databaseReference = FirebaseDatabase.getInstance()
     val usersDao = UsersDao(databaseReference)
     private val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -62,15 +65,15 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater)
+        initCloudinary()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCloudinary()
        getUserInformation()
 
         binding.saveBtn.setOnClickListener {
@@ -117,41 +120,45 @@ class ProfileFragment : Fragment() {
     private fun uploadImage(uri: Uri) {
         val inputStream = requireContext().contentResolver.openInputStream(uri)
         val userId = user?.uid.toString()
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = cloudinary?.uploader()?.upload(inputStream, ObjectUtils.emptyMap())
-                val imageUrl = result?.get("secure_url") as String
+                val result = cloudinary.uploader().upload(inputStream, ObjectUtils.emptyMap())
+                val imageUrl = result.get("secure_url") as String
                 val publicId = result.get("public_id") as String
                 deleteOldImage(userId)
                 usersDao.updateUserImage(userId,imageUrl,publicId){ success ->
-                    requireActivity().runOnUiThread{
-                    if (success){
-                        Toast.makeText(requireContext(),"Image added successfully",Toast.LENGTH_LONG).show()
-                    }else{
-                        Toast.makeText(requireContext(),"Failed to upload image",Toast.LENGTH_LONG).show()
-                    }
+                        requireActivity().runOnUiThread {
+                            if (success) {
+                                Toast.makeText(requireContext(),"Image added successfully", Toast.LENGTH_LONG).show()
+                            } else {
+                                Toast.makeText(requireContext(),"Failed to upload image", Toast.LENGTH_LONG).show()
+                            }
                         }
                 }
-                requireActivity().runOnUiThread {
-                    Glide.with(this).load(imageUrl).placeholder(R.drawable.blank_profile_picture).into(binding.profileImage)
+                if (isAdded) {
+                    requireActivity().runOnUiThread {
+                        Glide.with(requireContext()).load(imageUrl)
+                            .placeholder(R.drawable.blank_profile_picture)
+                            .into(binding.profileImage)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }.start()
+        }
     }
 
     private fun deleteOldImage(userId : String){
         usersDao.getUserPublicId(userId){ publicId ->
             if (publicId != null){
-                Thread {
+                CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val options = mapOf("resource_type" to "image")
-                        cloudinary?.uploader()?.destroy(publicId, options)
+                        cloudinary.uploader().destroy(publicId, options)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                }.start()
+                }
             }
         }
     }
@@ -182,11 +189,12 @@ class ProfileFragment : Fragment() {
                 binding.userEmailTv.text = user.email.toString()
                 binding.userNameTv.text = "$firstName $lastName"
                 binding.userPhoneEt.setText(phone)
-
-                Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.blank_profile_picture)
-                    .into(binding.profileImage)
+                if (isAdded) {
+                    Glide.with(requireContext())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.blank_profile_picture)
+                        .into(binding.profileImage)
+                }
             } ?: run {
                 Toast.makeText(requireContext(), "Failed to retrieve user info", Toast.LENGTH_SHORT).show()
             }
