@@ -3,10 +3,7 @@ package com.example.padellex
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.padellex.Dao.UsersDao
 import com.example.padellex.databinding.ActivitySignupBinding
 import com.google.firebase.Firebase
@@ -14,7 +11,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,8 +67,10 @@ class SignupActivity : AppCompatActivity() {
                             .build()
                         user?.updateProfile(profileUpdates)
                         withContext(Dispatchers.Main) {
-                            saveUserInfoInDatabase(user?.uid,firstName,lastName,phone)
-                            navigateToLogin()
+                            if (user != null) {
+                                saveUserInfoInDatabase(user!!.uid, firstName, lastName, phone)
+                                navigateToVerification()
+                            }
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
@@ -89,6 +87,12 @@ class SignupActivity : AppCompatActivity() {
                 binding.phoneLayout.error = getString(R.string.empty_edittext)
             }
         }
+    }
+
+    private fun navigateToVerification() {
+        val intent = Intent(this, VerificationActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun navigateToLogin(){
