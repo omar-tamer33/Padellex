@@ -2,11 +2,7 @@ package com.example.padellex
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.padellex.databinding.ActivityLoginBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -47,10 +43,15 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkUserLoginState() {
         val currentUser = auth.currentUser
-        if (currentUser != null) {
-            val intent = Intent(this,HomeActivity::class.java)
-            startActivity(intent)
-            finish()
+        currentUser?.reload()?.addOnCompleteListener {
+            if (currentUser.isEmailVerified) {
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else if (!currentUser.isEmailVerified) {
+                val intent = Intent(this, VerificationActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
