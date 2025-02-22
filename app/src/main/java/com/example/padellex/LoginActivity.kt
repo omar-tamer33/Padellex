@@ -34,6 +34,11 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.forgetPasswordTv.setOnClickListener {
+            val intent = Intent(this,ForgetPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun onStart() {
