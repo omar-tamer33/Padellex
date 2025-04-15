@@ -17,10 +17,13 @@
         android:theme="@style/Theme.Padellex"
         tools:targetApi="31">
         <activity
-            android:name=".ForgetPasswordActivity"
+            android:name=".activities.UserBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".VerificationActivity"
+            android:name=".activities.ForgetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.VerificationActivity"
             android:exported="false" />
 
         <meta-data
@@ -28,22 +31,22 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".MapActivity"
+            android:name=".activities.MapActivity"
             android:exported="false" />
         <activity
-            android:name=".BookingActivity"
+            android:name=".activities.BookingActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".activities.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

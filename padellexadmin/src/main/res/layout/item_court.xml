@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="10dp"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/courtImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                app:layout_constraintHeight_percent="0.5"
+                android:src="@drawable/court"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+            <TextView
+                android:id="@+id/courtNameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Court 1"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_margin="15dp"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/courtImage"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/courtLocationTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/gray"
+                tools:text="Alexandria , Miami"
+                android:layout_marginStart="15dp"
+                app:layout_constraintTop_toBottomOf="@id/courtNameTv"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/courtPriceTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                tools:text="300"
+                app:layout_constraintTop_toBottomOf="@id/courtLocationTv"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/egp"
+                android:textStyle="bold"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:textSize="25sp"
+                app:layout_constraintTop_toBottomOf="@id/courtLocationTv"
+                app:layout_constraintStart_toEndOf="@id/courtPriceTv"
+                />
+
+            <ImageView
+                android:id="@+id/deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/delete_button"
+                android:padding="10dp"
+                android:src="@drawable/ic_remove"
+                android:layout_margin="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

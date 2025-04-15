@@ -7,5 +7,9 @@
     <string name="forget_your_password">Forget your password</string>
     <string name="empty_edittext">required</string>
     <string name="error">You have entered an invalid username or password</string>
+    <string name="egp">EGP</string>
+    <string name="home">HOME</string>
+    <string name="booking">BOOKING</string>
+
 
 </resources>
