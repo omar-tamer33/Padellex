@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.example.padellex.CourtItem
+import com.example.padellex.model.CourtItem
 import com.example.padellex.R
 
 class CourtAdapter(val mutableList: MutableList<CourtItem>) : Adapter<CourtAdapter.courtItemViewHolder>() {
@@ -22,7 +22,7 @@ class CourtAdapter(val mutableList: MutableList<CourtItem>) : Adapter<CourtAdapt
     override fun getItemCount(): Int = mutableList.size
 
     override fun onBindViewHolder(holder: courtItemViewHolder, position: Int) {
-        val courtItem :CourtItem= mutableList.get(position)
+        val courtItem : CourtItem = mutableList.get(position)
         holder.bind(courtItem)
         holder.itemView.setOnClickListener {
             courtItemClickListener?.onCourtItemClick(courtItem,position)
@@ -41,6 +41,6 @@ class CourtAdapter(val mutableList: MutableList<CourtItem>) : Adapter<CourtAdapt
 
     }
     interface onCourtItemClickListener{
-        fun onCourtItemClick(courtItem: CourtItem,position: Int)
+        fun onCourtItemClick(courtItem: CourtItem, position: Int)
     }
 }

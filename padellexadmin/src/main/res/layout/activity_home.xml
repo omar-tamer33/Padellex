@@ -1,86 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".HomeActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
-    <TextView
-        android:id="@+id/text"
+    <FrameLayout
+        android:id="@+id/fragmentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="upload"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/courtname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="courtname"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtnameEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         />
 
-    <TextView
-        android:id="@+id/courtlocationTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="location"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtlocationEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/courtpriceTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="price"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtpriceEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/courtLatitudeTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="latitude"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtLatitudeEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/courtLongitudeTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="longitude"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtLongitudeEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <Button
-        android:id="@+id/savebtn"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="save"
+        android:src="@drawable/ic_plus"
+        app:layout_anchor="@id/bottomAppBar"
+        app:backgroundTint="@color/Blue"
+        android:layout_margin="18dp"
+        app:tint="@color/white"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         />
-</LinearLayout>
+
+   <com.google.android.material.bottomappbar.BottomAppBar
+       android:id="@+id/bottomAppBar"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_gravity="bottom"
+       app:fabAnchorMode="cradle"
+       app:fabAlignmentMode="center"
+       app:fabCradleMargin="12dp"
+       >
+       <com.google.android.material.bottomnavigation.BottomNavigationView
+           android:id="@+id/bottomNavBar"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           app:menu="@menu/bottom_nav_bar_menu"
+           app:labelVisibilityMode="unlabeled"
+           app:itemActiveIndicatorStyle="@null"
+           app:itemIconTint="@color/on_item_select_bottom_nav"
+           android:background="@color/transparent"
+           />
+
+   </com.google.android.material.bottomappbar.BottomAppBar>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

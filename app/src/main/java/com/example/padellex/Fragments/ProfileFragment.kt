@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
-import com.example.padellex.Dao.UsersDao
-import com.example.padellex.LoginActivity
+import com.example.padellex.Repositories.UserRepository
+import com.example.padellex.activities.LoginActivity
 import com.example.padellex.R
 import com.example.padellex.databinding.FragmentProfileBinding
 import com.google.firebase.Firebase
@@ -37,7 +37,7 @@ class ProfileFragment : Fragment() {
     val user = auth.currentUser
     lateinit var cloudinary : Cloudinary
     val databaseReference = FirebaseDatabase.getInstance()
-    val usersDao = UsersDao(databaseReference)
+    val usersDao = UserRepository(databaseReference)
     private val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_IMAGES
     } else {
@@ -82,7 +82,7 @@ class ProfileFragment : Fragment() {
 
         binding.signoutBtn.setOnClickListener {
             auth.signOut()
-            val intent = Intent(requireContext(),LoginActivity::class.java)
+            val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
             activity?.finish()
         }

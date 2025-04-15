@@ -47,6 +47,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.view)
     implementation(libs.cloudinary.android)
     implementation(libs.glide)
     implementation(libs.circleimageview)

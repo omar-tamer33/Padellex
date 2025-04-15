@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.padellex.Adapters.CourtAdapter
-import com.example.padellex.BookingActivity
-import com.example.padellex.CourtItem
-import com.example.padellex.Dao.CourtsDao
+import com.example.padellex.activities.BookingActivity
+import com.example.padellex.model.CourtItem
+import com.example.padellex.Repositories.CourtsRepository
 import com.example.padellex.databinding.FragmentBookingBinding
 import com.google.firebase.database.FirebaseDatabase
 
@@ -19,7 +19,7 @@ class BookingFragment : Fragment() {
     lateinit var mutableList: MutableList<CourtItem>
     lateinit var adapter: CourtAdapter
     val databaseReference = FirebaseDatabase.getInstance()
-    val courtDao = CourtsDao(databaseReference)
+    val courtsRepository = CourtsRepository(databaseReference)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -37,7 +37,7 @@ class BookingFragment : Fragment() {
     }
 
     private fun getCourtData() {
-        courtDao.getAllCourts { courtItems ->
+        courtsRepository.getAllCourts { courtItems ->
             if (courtItems.isNotEmpty()){
                 mutableList.clear()
                 mutableList.addAll(courtItems)
@@ -46,7 +46,7 @@ class BookingFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 adapter.courtItemClickListener = object : CourtAdapter.onCourtItemClickListener{
                     override fun onCourtItemClick(courtItem: CourtItem, position: Int) {
-                        val intent : Intent = Intent(activity,BookingActivity::class.java)
+                        val intent : Intent = Intent(activity, BookingActivity::class.java)
                         intent.putExtra("court",courtItem)
                         startActivity(intent)
                     }
