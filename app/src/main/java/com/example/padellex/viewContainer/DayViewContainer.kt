@@ -1,8 +1,6 @@
 package com.example.padellex.viewContainer
 
 import android.view.View
-import android.widget.TextView
-import com.example.padellex.R
 import com.example.padellex.databinding.CalendarDayLayoutBinding
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
@@ -10,7 +8,6 @@ import com.kizitonwose.calendar.view.WeekDayBinder
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
-import kotlin.time.Duration.Companion.days
 
 class CustomWeekDayBinder(val selectedColor : Int,val unSelectedColor : Int,val onDateSelected : (WeekDay) -> Unit) : WeekDayBinder<DayViewContainer> {
     var selectedDate: LocalDate? = LocalDate.now()

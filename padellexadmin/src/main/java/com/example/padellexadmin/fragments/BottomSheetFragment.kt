@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.padellexadmin.Repositories.CourtsRepository
 import com.example.padellexadmin.databinding.BottomSheetBinding
 import com.example.padellexadmin.model.CourtData
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BottomSheetFragment: BottomSheetDialogFragment() {
+    @Inject lateinit var courtsRepository: CourtsRepository
     lateinit var binding: BottomSheetBinding
-    val databaseReference = FirebaseDatabase.getInstance()
-    val courtsRepository = CourtsRepository(databaseReference)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

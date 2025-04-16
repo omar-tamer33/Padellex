@@ -6,8 +6,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import javax.inject.Inject
 
-class UserBookingRepository(db : FirebaseDatabase) {
+class UserBookingRepository @Inject constructor(db : FirebaseDatabase) {
     val userBookingRef = db.getReference("User Booking")
 
     fun addUserBooking(userId : String , userBookingItem: UserBookingItem){

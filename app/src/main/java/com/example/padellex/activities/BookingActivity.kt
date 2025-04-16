@@ -10,33 +10,25 @@ import com.example.padellex.R
 import com.example.padellex.Repositories.TimeSlotsRepository
 import com.example.padellex.Repositories.UserBookingRepository
 import com.example.padellex.databinding.ActivityBookingBinding
-import com.example.padellex.model.BookingData
 import com.example.padellex.model.CourtItem
 import com.example.padellex.model.TimeSlot
 import com.example.padellex.model.UserBookingItem
 import com.example.padellex.viewContainer.CustomWeekDayBinder
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.util.UUID
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BookingActivity : AppCompatActivity() {
+    @Inject lateinit var auth: FirebaseAuth
+    @Inject lateinit var timeSlotsRepository: TimeSlotsRepository
+    @Inject lateinit var userBookingRepository: UserBookingRepository
     lateinit var binding: ActivityBookingBinding
     var courtItem: CourtItem? = null
-    val auth : FirebaseAuth = Firebase.auth
     val currentDate = LocalDate.now()
     lateinit var weekDayBinder: CustomWeekDayBinder
-    val db = FirebaseDatabase.getInstance()
-    val timeSlotsRepository = TimeSlotsRepository(db)
-    val userBookingRepository = UserBookingRepository(db)
     lateinit var adapter: TimeAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

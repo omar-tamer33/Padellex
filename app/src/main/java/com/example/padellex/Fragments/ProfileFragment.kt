@@ -23,21 +23,19 @@ import com.example.padellex.Repositories.UserRepository
 import com.example.padellex.activities.LoginActivity
 import com.example.padellex.R
 import com.example.padellex.databinding.FragmentProfileBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
+    @Inject lateinit var auth : FirebaseAuth
+    @Inject lateinit var userRepository: UserRepository
     lateinit var binding: FragmentProfileBinding
-    val auth = Firebase.auth
-    val user = auth.currentUser
     lateinit var cloudinary : Cloudinary
-    val databaseReference = FirebaseDatabase.getInstance()
-    val usersDao = UserRepository(databaseReference)
     private val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_IMAGES
     } else {
@@ -119,14 +117,14 @@ class ProfileFragment : Fragment() {
 
     private fun uploadImage(uri: Uri) {
         val inputStream = requireContext().contentResolver.openInputStream(uri)
-        val userId = user?.uid.toString()
+        val userId = auth.currentUser?.uid.toString()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = cloudinary.uploader().upload(inputStream, ObjectUtils.emptyMap())
                 val imageUrl = result.get("secure_url") as String
                 val publicId = result.get("public_id") as String
                 deleteOldImage(userId)
-                usersDao.updateUserImage(userId,imageUrl,publicId){ success ->
+                userRepository.updateUserImage(userId,imageUrl,publicId){ success ->
                         requireActivity().runOnUiThread {
                             if (success) {
                                 Toast.makeText(requireContext(),"Image added successfully", Toast.LENGTH_LONG).show()
@@ -149,7 +147,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun deleteOldImage(userId : String){
-        usersDao.getUserPublicId(userId){ publicId ->
+        userRepository.getUserPublicId(userId){ publicId ->
             if (publicId != null){
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
@@ -178,15 +176,15 @@ class ProfileFragment : Fragment() {
     }
 
     private fun getUserInformation() {
-        val userId = user?.uid ?: return
-        usersDao.getUser(userId){ userInfo ->
+        val userId = auth.currentUser?.uid ?: return
+        userRepository.getUser(userId){ userInfo ->
             userInfo?.let {
                 val firstName = userInfo.firstName
                 val lastName = userInfo.lastName
                 val phone = userInfo.phone
                 val imageUrl = userInfo.imageUrl
 
-                binding.userEmailTv.text = user.email.toString()
+                binding.userEmailTv.text = auth.currentUser!!.email.toString()
                 binding.userNameTv.text = "$firstName $lastName"
                 binding.userPhoneEt.setText(phone)
                 if (isAdded) {
@@ -203,8 +201,8 @@ class ProfileFragment : Fragment() {
 
     private fun updateUserInformation(){
             val phone = binding.userPhoneEt.text.toString()
-            val userId = user?.uid ?: return
-        usersDao.updateUserPhone(userId,phone){ success ->
+            val userId = auth.currentUser?.uid ?: return
+        userRepository.updateUserPhone(userId,phone){ success ->
             if (success){
                 Toast.makeText(requireContext(),"your information updated successfully",Toast.LENGTH_LONG).show()
             }else{

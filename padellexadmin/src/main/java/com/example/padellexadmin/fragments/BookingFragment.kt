@@ -12,13 +12,14 @@ import com.example.padellexadmin.Repositories.TimeSlotsRepository
 import com.example.padellexadmin.Repositories.UserBookingRepository
 import com.example.padellexadmin.databinding.FargmentBookingBinding
 import com.example.padellexadmin.model.UserBookingItem
-import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BookingFragment : Fragment() {
+    @Inject lateinit var userBookingRepository: UserBookingRepository
+    @Inject lateinit var timeSlotsRepository: TimeSlotsRepository
     lateinit var binding : FargmentBookingBinding
-    val db = FirebaseDatabase.getInstance()
-    val userBookingRepository = UserBookingRepository(db)
-    val timeSlotsRepository = TimeSlotsRepository(db)
     val userBookingList = mutableListOf<UserBookingItem>()
     lateinit var adapter: UserBookingAdapter
     override fun onCreateView(

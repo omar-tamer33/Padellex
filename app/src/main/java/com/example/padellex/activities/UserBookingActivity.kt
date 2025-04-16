@@ -2,40 +2,33 @@ package com.example.padellex.activities
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.padellex.Adapters.OnDeleteClickListener
 import com.example.padellex.Adapters.UserBookingAdapter
-import com.example.padellex.R
-import com.example.padellex.Repositories.CourtsRepository
 import com.example.padellex.Repositories.TimeSlotsRepository
 import com.example.padellex.Repositories.UserBookingRepository
-import com.example.padellex.Repositories.UserRepository
 import com.example.padellex.databinding.ActivityUserBookingBinding
 import com.example.padellex.model.UserBookingItem
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.database
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UserBookingActivity : AppCompatActivity() {
+    @Inject lateinit var userBookingRepository: UserBookingRepository
+    @Inject lateinit var timeSlotsRepository: TimeSlotsRepository
+    @Inject lateinit var auth: FirebaseAuth
     lateinit var binding: ActivityUserBookingBinding
-    val db = FirebaseDatabase.getInstance()
-    val userBookingRepository = UserBookingRepository(db)
-    val timeSlotsRepository = TimeSlotsRepository(db)
-    val auth = FirebaseAuth.getInstance()
-    val userId = auth.currentUser!!.uid
     val userBookingList = mutableListOf<UserBookingItem>()
     lateinit var adapter: UserBookingAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserBookingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val userId = auth.currentUser!!.uid
         adapter = UserBookingAdapter(userBookingList)
         binding.userBookingRv.adapter = adapter
-        getUserBookingData()
+        getUserBookingData(userId)
         adapter.deleteBtnClickListener = object : OnDeleteClickListener{
             override fun onDeleteClick(userBookingItem: UserBookingItem, position: Int) {
                 timeSlotsRepository.unBookTimeSlot(userBookingItem)
@@ -46,7 +39,7 @@ class UserBookingActivity : AppCompatActivity() {
         }
     }
 
-    private fun getUserBookingData() {
+    private fun getUserBookingData(userId : String) {
         userBookingRepository.getAllUserBooking(userId) { list ->
             if (list.isNotEmpty()) {
                 userBookingList.clear()

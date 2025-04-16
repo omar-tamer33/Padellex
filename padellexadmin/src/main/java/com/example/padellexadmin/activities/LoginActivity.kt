@@ -5,25 +5,25 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellexadmin.R
 import com.example.padellexadmin.databinding.ActivityLoginBinding
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
+    @Inject lateinit var auth : FirebaseAuth
     lateinit var binding: ActivityLoginBinding
-    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth
 
         binding.loginBtn.setOnClickListener {
             userLoginWithEmailAndPassword()

@@ -2,8 +2,9 @@ package com.example.padellex.Repositories
 
 import com.example.padellex.model.UserInfo
 import com.google.firebase.database.FirebaseDatabase
+import javax.inject.Inject
 
-class UserRepository(db : FirebaseDatabase) {
+class UserRepository @Inject constructor(db : FirebaseDatabase) {
 
   private  val userRef = db.getReference("Users Information")
 
