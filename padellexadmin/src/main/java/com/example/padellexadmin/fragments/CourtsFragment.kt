@@ -12,13 +12,14 @@ import com.example.padellexadmin.Repositories.CourtsRepository
 import com.example.padellexadmin.activities.CourtDetailsActivity
 import com.example.padellexadmin.databinding.FragmentCourtsBinding
 import com.example.padellexadmin.model.CourtData
-import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CourtsFragment : Fragment() {
+    @Inject lateinit var courtsRepository: CourtsRepository
     lateinit var binding: FragmentCourtsBinding
     lateinit var adapter: CourtAdapter
-    val db = FirebaseDatabase.getInstance()
-    val courtsRepository = CourtsRepository(db)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

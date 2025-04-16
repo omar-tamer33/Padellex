@@ -1,19 +1,13 @@
 package com.example.padellexadmin.Repositories
 
-import android.util.Log
 import com.example.padellexadmin.model.CourtData
-import com.example.padellexadmin.model.TimeSlot
-import com.example.padellexadmin.utilities.TimeSlotUtils
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-import java.util.TimeZone
+import javax.inject.Inject
 
-class CourtsRepository(db : FirebaseDatabase) {
+class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
     val courtRef = db.getReference("Court Information")
 
     fun addCourt(court: CourtData, onComplete: (Boolean) -> Unit) {

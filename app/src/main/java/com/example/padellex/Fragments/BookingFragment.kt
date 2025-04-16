@@ -12,14 +12,15 @@ import com.example.padellex.activities.BookingActivity
 import com.example.padellex.model.CourtItem
 import com.example.padellex.Repositories.CourtsRepository
 import com.example.padellex.databinding.FragmentBookingBinding
-import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BookingFragment : Fragment() {
+    @Inject lateinit var courtsRepository: CourtsRepository
     lateinit var binding: FragmentBookingBinding
     lateinit var mutableList: MutableList<CourtItem>
     lateinit var adapter: CourtAdapter
-    val databaseReference = FirebaseDatabase.getInstance()
-    val courtsRepository = CourtsRepository(databaseReference)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

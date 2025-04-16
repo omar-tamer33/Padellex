@@ -1,9 +1,6 @@
 package com.example.padellex.viewContainer
 
-import android.content.res.Resources
-import android.graphics.Color
 import android.view.View
-import com.example.padellexadmin.R
 import com.example.padellexadmin.databinding.CalendarDayLayoutBinding
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer

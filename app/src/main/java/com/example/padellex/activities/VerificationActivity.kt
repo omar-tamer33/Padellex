@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.databinding.ActivityVerificationBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class VerificationActivity : AppCompatActivity() {
-    val auth = Firebase.auth
+    @Inject lateinit var auth : FirebaseAuth
     lateinit var binding: ActivityVerificationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

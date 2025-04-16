@@ -1,29 +1,27 @@
 package com.example.padellexadmin.activities
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.viewContainer.CustomWeekDayBinder
-import com.example.padellexadmin.Adapters.CourtAdapter
 import com.example.padellexadmin.Adapters.OnTimeClickListener
 import com.example.padellexadmin.Adapters.TimeAdapter
 import com.example.padellexadmin.R
-import com.example.padellexadmin.Repositories.CourtsRepository
 import com.example.padellexadmin.Repositories.TimeSlotsRepository
 import com.example.padellexadmin.databinding.ActivityCourtDetailsBinding
 import com.example.padellexadmin.model.CourtData
 import com.example.padellexadmin.model.TimeSlot
-import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CourtDetailsActivity : AppCompatActivity() {
+    @Inject lateinit var timeSlotsRepository: TimeSlotsRepository
     lateinit var binding: ActivityCourtDetailsBinding
     lateinit var weekDayBinder: CustomWeekDayBinder
     lateinit var courtData : CourtData
     lateinit var adapter: TimeAdapter
     val currentDate = LocalDate.now()
-    val db = FirebaseDatabase.getInstance()
-    val timeSlotsRepository = TimeSlotsRepository(db)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCourtDetailsBinding.inflate(layoutInflater)

@@ -5,8 +5,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import javax.inject.Inject
 
-class CourtsRepository(db : FirebaseDatabase) {
+class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
     val courtRef = db.getReference("Court Information")
 
     fun getAllCourts(onComplete: (List<CourtItem>) -> Unit){

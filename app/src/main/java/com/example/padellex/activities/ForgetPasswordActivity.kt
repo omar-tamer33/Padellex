@@ -6,8 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivityForgetPasswordBinding
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ForgetPasswordActivity : AppCompatActivity() {
+    @Inject lateinit var auth: FirebaseAuth
     lateinit var binding: ActivityForgetPasswordBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +33,6 @@ class ForgetPasswordActivity : AppCompatActivity() {
     }
 
     private fun sendForgetPasswordLink(email: String) {
-        val auth = FirebaseAuth.getInstance()
         auth.sendPasswordResetEmail(email).addOnSuccessListener {
             Toast.makeText(this,"Reset Email sent",Toast.LENGTH_LONG).show()
         }.addOnFailureListener { e ->

@@ -8,24 +8,23 @@ import com.example.padellex.R
 import com.example.padellex.Repositories.UserRepository
 import com.example.padellex.databinding.ActivitySignupBinding
 import com.example.padellex.model.UserInfo
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.auth.auth
-import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignupActivity : AppCompatActivity() {
-    lateinit var auth : FirebaseAuth
+   @Inject lateinit var auth : FirebaseAuth
+    @Inject lateinit var userRepository: UserRepository
     lateinit var binding: ActivitySignupBinding
-    val databaseReference = FirebaseDatabase.getInstance()
-    val usersDao = UserRepository(databaseReference)
     lateinit var email : String
     lateinit var password : String
     lateinit var firstName : String
@@ -37,7 +36,6 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth
 
         binding.signupBtn.setOnClickListener {
             userRegister()
@@ -105,7 +103,7 @@ class SignupActivity : AppCompatActivity() {
 
     private fun saveUserInfoInDatabase(id : String? , firstName : String,lastName : String , phone : String){
         val userInfo = UserInfo(id = id, firstName = firstName, lastName = lastName, phone =phone)
-       usersDao.addUser(userInfo){ success ->
+       userRepository.addUser(userInfo){ success ->
            if (success){
                Toast.makeText(this,"Register completed",Toast.LENGTH_LONG).show()
            }else{
