@@ -2,28 +2,24 @@ package com.example.padellex.activities
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivityLoginBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.padellex.viewModels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.Exception
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
+    private val viewModel : LoginViewModel by viewModels()
     lateinit var binding: ActivityLoginBinding
-   @Inject lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        observeViewModel()
 
         binding.loginBtn.setOnClickListener {
             userLoginWithEmailAndPassword()
@@ -44,41 +40,48 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        checkUserLoginState()
+        viewModel.checkUserLoginState()
     }
 
-    private fun checkUserLoginState() {
-        val currentUser = auth.currentUser
-        currentUser?.reload()?.addOnCompleteListener {
-            if (currentUser.isEmailVerified) {
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else if (!currentUser.isEmailVerified) {
-                val intent = Intent(this, VerificationActivity::class.java)
-                startActivity(intent)
-            }
-        }
+    private fun navigateToHome(){
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun navigateToVerification(){
+        val intent = Intent(this, VerificationActivity::class.java)
+        startActivity(intent)
     }
 
     private fun userLoginWithEmailAndPassword(){
         val email = binding.emailEt.text.toString()
         val password = binding.passwordEt.text.toString()
         if (email.isNotBlank() && password.isNotBlank()){
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    auth.signInWithEmailAndPassword(email,password).await()
-                    checkUserLoginState()
-                }catch (e: Exception){
-                    withContext(Dispatchers.Main){
-                        binding.emailLayout.error = getString(R.string.error)
-                        binding.passwordLayout.error = getString(R.string.error)
-                    }
-                }
-            }
+           viewModel.userLoginWithEmailAndPassword(email,password)
         }else{
-            binding.passwordLayout.error = getString(R.string.empty_edittext)
-            binding.emailLayout.error = getString(R.string.empty_edittext)
+            if (password.isBlank()) binding.passwordLayout.error = getString(R.string.empty_edittext)
+            if (email.isBlank()) binding.emailLayout.error = getString(R.string.empty_edittext)
+        }
+    }
+
+    private fun observeViewModel(){
+        viewModel.success.observe(this){success->
+            if (success){
+                binding.emailLayout.error = null
+                binding.passwordLayout.error = null
+            }else {
+                binding.emailLayout.error = getString(R.string.error)
+                binding.passwordLayout.error = getString(R.string.error)
+            }
+        }
+
+        viewModel.isUserVerified.observe(this){userVerified ->
+            if (userVerified){
+                navigateToHome()
+            }else{
+                navigateToVerification()
+            }
         }
     }
 }

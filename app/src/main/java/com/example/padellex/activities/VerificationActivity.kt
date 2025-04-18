@@ -3,58 +3,56 @@ package com.example.padellex.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.databinding.ActivityVerificationBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.padellex.viewModels.VerificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class VerificationActivity : AppCompatActivity() {
-    @Inject lateinit var auth : FirebaseAuth
+    val viewModel : VerificationViewModel by viewModels()
     lateinit var binding: ActivityVerificationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVerificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sendEmailVerification()
+        observeViewModel()
+
+        viewModel.sendEmailVerification()
 
         binding.backArrow.setOnClickListener {
-            auth.signOut()
+            viewModel.signOut()
             navigateToLogin()
         }
 
         binding.checkAgainBtn.setOnClickListener {
-            val user = auth.currentUser
-            if (user != null){
-                user.reload().addOnCompleteListener {
-                    if (user.isEmailVerified){
-                        navigateToLogin()
-                    }else{
-                        sendEmailVerification()
-                    }
-                }
-            }
+           viewModel.checkIsUserVerified()
         }
 
     }
 
-    private fun sendEmailVerification(){
-        val user = auth.currentUser
-        if (user != null){
-            if (!user.isEmailVerified){
-                user.sendEmailVerification().addOnSuccessListener {
-                    Toast.makeText(this,"Email verification sent",Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
+
 
     private fun navigateToLogin(){
         val intent = Intent(this , LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun observeViewModel(){
+        viewModel.message.observe(this){message->
+            Toast.makeText(this,message, Toast.LENGTH_LONG).show()
+        }
+
+        viewModel.isUserVerified.observe(this){isUserVerified->
+            if (isUserVerified){
+                navigateToLogin()
+            }else{
+                viewModel.sendEmailVerification()
+            }
+        }
     }
 
 }

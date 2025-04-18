@@ -12,7 +12,7 @@ import com.example.padellex.databinding.ItemTimeSlotBinding
 import com.example.padellex.model.TimeSlot
 
 class TimeAdapter(val timeList: MutableList<TimeSlot>) : Adapter<TimeViewHolder>() {
-    var onTimeItemSelectedListener : OnTimeSelectedListener? = null
+    var onSelectionChanged: (() -> Unit)? = null
     private val selectedItems = mutableSetOf<Int>()
     private val selectedSlots = mutableListOf<TimeSlot>()
 
@@ -28,6 +28,7 @@ class TimeAdapter(val timeList: MutableList<TimeSlot>) : Adapter<TimeViewHolder>
         selectedItems.clear()
         selectedSlots.clear()
         notifyDataSetChanged()
+        onSelectionChanged?.invoke()
     }
 
 
@@ -65,7 +66,7 @@ class TimeAdapter(val timeList: MutableList<TimeSlot>) : Adapter<TimeViewHolder>
                 selectedSlots.add(item)
             }
             notifyItemChanged(position)
-            onTimeItemSelectedListener?.onTimeSelected(item,position,selectedSlots)
+            onSelectionChanged?.invoke()
         }
         }
     }
@@ -87,7 +88,4 @@ class TimeViewHolder(val binding: ItemTimeSlotBinding) : ViewHolder(binding.root
 }
 
 
-interface OnTimeSelectedListener{
-    fun onTimeSelected(item: TimeSlot , position: Int , selectedSlots : MutableList<TimeSlot>)
-}
 

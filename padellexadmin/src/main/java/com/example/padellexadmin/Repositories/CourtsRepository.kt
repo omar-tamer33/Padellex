@@ -1,5 +1,6 @@
 package com.example.padellexadmin.Repositories
 
+import android.util.Log
 import com.example.padellexadmin.model.CourtData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -10,19 +11,19 @@ import javax.inject.Inject
 class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
     val courtRef = db.getReference("Court Information")
 
-    fun addCourt(court: CourtData, onComplete: (Boolean) -> Unit) {
+    fun addCourt(court: CourtData) {
         courtRef.child(court.id).setValue(court).addOnSuccessListener {
-            onComplete(true)
-        }.addOnFailureListener {
-            onComplete(false)
+            Log.e("TAG", "addCourt successfully ", )
+        }.addOnFailureListener {e->
+            Log.e("TAG", "addCourt: error $e", )
         }
     }
 
-    fun deleteCourt(id: String, onComplete: (Boolean) -> Unit) {
+    fun deleteCourt(id: String) {
         courtRef.child(id).removeValue().addOnSuccessListener {
-            onComplete(true)
-        }.addOnFailureListener {
-            onComplete(false)
+            Log.e("TAG", "deleteCourt successfully ", )
+        }.addOnFailureListener {e ->
+            Log.e("TAG", "deleteCourt: error $e", )
         }
     }
 

@@ -3,39 +3,28 @@ package com.example.padellex.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.R
-import com.example.padellex.Repositories.UserRepository
 import com.example.padellex.databinding.ActivitySignupBinding
-import com.example.padellex.model.UserInfo
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
+import com.example.padellex.viewModels.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.Exception
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignupActivity : AppCompatActivity() {
-   @Inject lateinit var auth : FirebaseAuth
-    @Inject lateinit var userRepository: UserRepository
+    private val viewModel : SignupViewModel by viewModels()
     lateinit var binding: ActivitySignupBinding
     lateinit var email : String
     lateinit var password : String
     lateinit var firstName : String
     lateinit var lastName : String
     lateinit var phone : String
-    var user : FirebaseUser? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        observeViewModel()
 
         binding.signupBtn.setOnClickListener {
             userRegister()
@@ -58,33 +47,19 @@ class SignupActivity : AppCompatActivity() {
         } else {
             binding.passwordLayout.error = null
             if (email.isNotBlank() && password.isNotBlank() && firstName.isNotBlank() && lastName.isNotBlank() && phone.isNotBlank()) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        auth.createUserWithEmailAndPassword(email, password).await()
-                        user = auth.currentUser
-                        val profileUpdates = UserProfileChangeRequest.Builder()
-                            .setDisplayName("$firstName $lastName")
-                            .build()
-                        user?.updateProfile(profileUpdates)
-                        withContext(Dispatchers.Main) {
-                            if (user != null) {
-                                saveUserInfoInDatabase(user!!.uid, firstName, lastName, phone)
-                                navigateToVerification()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@SignupActivity,"${e.message}", Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                }
+                viewModel.userRegister(
+                    email = email,
+                    password = password,
+                    firstName = firstName,
+                    lastName = lastName,
+                    phone = phone
+                )
             }else{
-                binding.passwordLayout.error = getString(R.string.empty_edittext)
-                binding.emailLayout.error = getString(R.string.empty_edittext)
-                binding.firstNameLayout.error = getString(R.string.empty_edittext)
-                binding.lastNameLayout.error = getString(R.string.empty_edittext)
-                binding.phoneLayout.error = getString(R.string.empty_edittext)
+                if (email.isBlank()) binding.emailLayout.error = getString(R.string.empty_edittext)
+                if (password.isBlank()) binding.passwordLayout.error = getString(R.string.empty_edittext)
+                if (firstName.isBlank()) binding.firstNameLayout.error = getString(R.string.empty_edittext)
+                if (lastName.isBlank()) binding.lastNameLayout.error = getString(R.string.empty_edittext)
+                if (phone.isBlank()) binding.phoneLayout.error = getString(R.string.empty_edittext)
             }
         }
     }
@@ -101,15 +76,20 @@ class SignupActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun saveUserInfoInDatabase(id : String? , firstName : String,lastName : String , phone : String){
-        val userInfo = UserInfo(id = id, firstName = firstName, lastName = lastName, phone =phone)
-       userRepository.addUser(userInfo){ success ->
-           if (success){
-               Toast.makeText(this,"Register completed",Toast.LENGTH_LONG).show()
-           }else{
-               Toast.makeText(this,"Register failed",Toast.LENGTH_LONG).show()
+    private fun observeViewModel(){
+        viewModel.errorMessage.observe(this){error ->
+            Toast.makeText(this,error,Toast.LENGTH_LONG).show()
+        }
 
-           }
-       }
+        viewModel.successMessage.observe(this){message ->
+            Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+        }
+
+        viewModel.isUserRegistered.observe(this){ userRegistered ->
+            if (userRegistered){
+                navigateToVerification()
+            }
+        }
     }
+
 }

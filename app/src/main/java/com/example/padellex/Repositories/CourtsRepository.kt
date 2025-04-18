@@ -10,7 +10,7 @@ import javax.inject.Inject
 class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
     val courtRef = db.getReference("Court Information")
 
-    fun getAllCourts(onComplete: (List<CourtItem>) -> Unit){
+   fun getAllCourts(onComplete: (List<CourtItem>) -> Unit){
         courtRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val courtList = mutableListOf<CourtItem>()
