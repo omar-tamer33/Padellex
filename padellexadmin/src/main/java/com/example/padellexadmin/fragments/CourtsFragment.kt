@@ -7,17 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.padellexadmin.Adapters.CourtAdapter
-import com.example.padellexadmin.Repositories.CourtsRepository
 import com.example.padellexadmin.activities.CourtDetailsActivity
 import com.example.padellexadmin.databinding.FragmentCourtsBinding
 import com.example.padellexadmin.model.CourtData
+import com.example.padellexadmin.viewModels.CourtsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CourtsFragment : Fragment() {
-    @Inject lateinit var courtsRepository: CourtsRepository
+    private val viewModel : CourtsViewModel by viewModels()
     lateinit var binding: FragmentCourtsBinding
     lateinit var adapter: CourtAdapter
     override fun onCreateView(
@@ -33,30 +33,39 @@ class CourtsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = CourtAdapter(mutableListOf())
         binding.recyclerView.adapter = adapter
-        getCourtsData()
+        adapter.courtItemClickListener = object : CourtAdapter.onCourtItemClickListener {
+            override fun onCourtItemClick(courtData: CourtData, position: Int) {
+               navigateToCourtDetails(courtData)
+            }
+        }
+
+        adapter.deleteItemClickListener = object : CourtAdapter.onDeleteItemClickListener{
+            override fun onDeleteClick(courtData: CourtData, position: Int) {
+                viewModel.onDeleteClick(courtData)
+            }
+        }
+        viewModel.getCourtsData()
+        observeViewModel()
 
     }
 
-    fun getCourtsData(){
-        courtsRepository.getAllCourts {courtItems ->
-            if (courtItems.isNotEmpty()) {
-                adapter.updateAdapter(courtItems)
-                adapter.courtItemClickListener = object : CourtAdapter.onCourtItemClickListener{
-                    override fun onCourtItemClick(courtData: CourtData, position: Int) {
-                        val intent = Intent(requireContext(), CourtDetailsActivity::class.java)
-                        intent.putExtra("courtData",courtData)
-                        startActivity(intent)
-                    }
-                }
-                adapter.deleteItemClickListener = object : CourtAdapter.onDeleteItemClickListener{
-                    override fun onDeleteClick(courtData: CourtData, position: Int) {
-                        courtsRepository.deleteCourt(courtData.id){}
-                    }
-
-                }
+    private fun observeViewModel(){
+        viewModel.list.observe(viewLifecycleOwner){courtsList->
+            if (courtsList.isNotEmpty()) {
+                adapter.updateAdapter(courtsList)
             }else{
                 Toast.makeText(requireContext(),"no courts found", Toast.LENGTH_LONG).show()
             }
         }
+
+        viewModel.onDeleteEvent.observe(viewLifecycleOwner){courtData->
+            viewModel.preformDelete(courtData.id)
+        }
+    }
+
+    private fun navigateToCourtDetails(courtData: CourtData){
+        val intent = Intent(requireContext(), CourtDetailsActivity::class.java)
+        intent.putExtra("courtData", courtData)
+        startActivity(intent)
     }
 }

@@ -63,5 +63,5 @@ class TimeViewHolder(val binding: ItemTimeSlotBinding) : ViewHolder(binding.root
 }
 
 interface OnTimeClickListener{
-    fun onTimeClick(item: TimeSlot , position: Int)
+    fun onTimeClick(timeSlot: TimeSlot , position: Int)
 }

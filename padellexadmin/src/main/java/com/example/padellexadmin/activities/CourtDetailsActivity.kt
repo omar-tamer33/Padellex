@@ -1,39 +1,45 @@
 package com.example.padellexadmin.activities
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.viewContainer.CustomWeekDayBinder
 import com.example.padellexadmin.Adapters.OnTimeClickListener
 import com.example.padellexadmin.Adapters.TimeAdapter
 import com.example.padellexadmin.R
-import com.example.padellexadmin.Repositories.TimeSlotsRepository
 import com.example.padellexadmin.databinding.ActivityCourtDetailsBinding
 import com.example.padellexadmin.model.CourtData
 import com.example.padellexadmin.model.TimeSlot
+import com.example.padellexadmin.viewModels.CourtDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CourtDetailsActivity : AppCompatActivity() {
-    @Inject lateinit var timeSlotsRepository: TimeSlotsRepository
+    private val viewModel : CourtDetailsViewModel by viewModels()
     lateinit var binding: ActivityCourtDetailsBinding
     lateinit var weekDayBinder: CustomWeekDayBinder
     lateinit var courtData : CourtData
     lateinit var adapter: TimeAdapter
     val currentDate = LocalDate.now()
+    var selectedDateStr = currentDate.toString()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCourtDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         adapter = TimeAdapter(mutableListOf())
         binding.timeSlotRv.adapter = adapter
-        courtData = intent.getParcelableExtra("courtData")!!
-        initCalendar()
-        timeSlotsRepository.generateTodaySlotsIfNeeded(courtData.id,currentDate.toString())
-        generateTimeSlotsForDate(currentDate.toString()){ timeSlot ->
-            timeSlotsRepository.timeSlotAvailability(courtId = courtData.id, dateStr = currentDate.toString(), timeSlot = timeSlot)
+        adapter.onTimeItemClickListener = object : OnTimeClickListener{
+            override fun onTimeClick(timeSlot: TimeSlot, position: Int) {
+                viewModel.timeSlotAvailability(courtId = courtData.id, dateStr = selectedDateStr, timeSlot = timeSlot)
+            }
+
         }
+        courtData = intent.getParcelableExtra("courtData")!!
+        observeViewModel()
+        initCalendar()
+        viewModel.generateTodaySlotsIfNeeded(courtData.id,currentDate.toString())
+        viewModel.generateTimeSlotsForDate(currentDate.toString(),courtData.id)
 
 
 
@@ -47,11 +53,10 @@ class CourtDetailsActivity : AppCompatActivity() {
                 val currentSelection = weekDayBinder.selectedDate
                 if (currentSelection != weekDay.date) {
                     weekDayBinder.selectedDate = weekDay.date
-                    timeSlotsRepository.generateTodaySlotsIfNeeded(courtId = courtData.id , weekDay.date.toString())
+                    selectedDateStr = weekDay.date.toString()
+                    viewModel.generateTodaySlotsIfNeeded(courtId = courtData.id , weekDay.date.toString())
                     binding.weekCalendarView.notifyDateChanged(weekDay.date)
-                    generateTimeSlotsForDate(weekDay.date.toString()){ timeSlot ->
-                        timeSlotsRepository.timeSlotAvailability(courtId = courtData.id, dateStr = weekDay.date.toString(), timeSlot = timeSlot)
-                    }
+                    viewModel.generateTimeSlotsForDate(weekDay.date.toString(),courtData.id)
                     if (currentSelection != null) {
                         binding.weekCalendarView.notifyDateChanged(currentSelection)
                     }
@@ -60,14 +65,9 @@ class CourtDetailsActivity : AppCompatActivity() {
         binding.weekCalendarView.dayBinder = weekDayBinder
     }
 
-    fun generateTimeSlotsForDate(dateStr : String , timeClick : (TimeSlot) -> Unit) {
-     timeSlotsRepository.getTimeSlots(dateStr = dateStr , courtId = courtData.id) { timeSlots ->
+    private fun observeViewModel(){
+        viewModel.list.observe(this){timeSlots->
             adapter.updateAdapter(timeSlots)
-            adapter.onTimeItemClickListener = object : OnTimeClickListener{
-                override fun onTimeClick(item: TimeSlot, position: Int) {
-                    timeClick(item)
-                }
-            }
         }
     }
 }

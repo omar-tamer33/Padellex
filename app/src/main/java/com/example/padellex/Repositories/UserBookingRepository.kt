@@ -27,26 +27,26 @@ class UserBookingRepository @Inject constructor(db : FirebaseDatabase) {
         }
     }
 
-    fun getAllUserBooking(userId: String, onComplete : (List<UserBookingItem>) -> Unit){
-        val userBookingItemList = mutableListOf<UserBookingItem>()
-        userBookingRef.child(userId).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                userBookingItemList.clear()
-                for (child in snapshot.children){
-                    child.getValue(UserBookingItem::class.java).let {
-                        if (it != null) {
-                            userBookingItemList.add(it)
+     fun getAllUserBooking(userId: String,onComplete : (List<UserBookingItem>) -> Unit){
+            val userBookingItemList = mutableListOf<UserBookingItem>()
+            userBookingRef.child(userId).addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    userBookingItemList.clear()
+                    for (child in snapshot.children) {
+                        child.getValue(UserBookingItem::class.java).let {
+                            if (it != null) {
+                                userBookingItemList.add(it)
+                            }
                         }
                     }
+                    Log.e("TAG", "onDataChange: $userBookingItemList",)
+                    onComplete(userBookingItemList)
                 }
-                onComplete(userBookingItemList)
-                Log.e("TAG", "onDataChange: $userBookingItemList", )
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("TAG", "onCancelled: failed to get all user booking $error", )
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("TAG", "onCancelled: failed to get all user booking $error")
+                }
 
-        })
-    }
+            })
+     }
 }

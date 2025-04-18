@@ -12,18 +12,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-    lateinit var binding: ActivityHomeBinding
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        changeFragment(CourtsFragment())
+        changeFragment(CourtsFragment::class.java)
 
         binding.bottomNavBar.setOnItemSelectedListener { id ->
             when(id.itemId){
-                R.id.home -> changeFragment(CourtsFragment())
-                R.id.booking -> changeFragment(BookingFragment())
+                R.id.home -> changeFragment(CourtsFragment::class.java)
+                R.id.booking -> changeFragment(BookingFragment::class.java)
             }
             return@setOnItemSelectedListener true
         }
@@ -35,8 +35,8 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    fun changeFragment(fragment: Fragment){
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentLayout,fragment).commit()
+    private fun changeFragment(fragment: Class<out Fragment>){
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentLayout,fragment,null).commit()
     }
 
 }

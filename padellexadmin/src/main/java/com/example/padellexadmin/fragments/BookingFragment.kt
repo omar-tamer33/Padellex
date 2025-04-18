@@ -6,19 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.padellexadmin.Adapters.OnDeleteClickListener
 import com.example.padellexadmin.Adapters.UserBookingAdapter
-import com.example.padellexadmin.Repositories.TimeSlotsRepository
-import com.example.padellexadmin.Repositories.UserBookingRepository
 import com.example.padellexadmin.databinding.FargmentBookingBinding
 import com.example.padellexadmin.model.UserBookingItem
+import com.example.padellexadmin.viewModels.BookingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class BookingFragment : Fragment() {
-    @Inject lateinit var userBookingRepository: UserBookingRepository
-    @Inject lateinit var timeSlotsRepository: TimeSlotsRepository
+    private val viewModel : BookingViewModel by viewModels()
     lateinit var binding : FargmentBookingBinding
     val userBookingList = mutableListOf<UserBookingItem>()
     lateinit var adapter: UserBookingAdapter
@@ -35,28 +33,35 @@ class BookingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = UserBookingAdapter(userBookingList)
         binding.recyclerView.adapter = adapter
-        getUserBookingData()
+        viewModel.getUserBookingData()
+        observeViewModel()
         adapter.deleteBtnClickListener = object : OnDeleteClickListener {
             override fun onDeleteClick(userBookingItem: UserBookingItem, position: Int) {
-                timeSlotsRepository.unBookTimeSlot(userBookingItem)
-                userBookingRepository.deleteUserBooking(userBookingItem.userId,userBookingItem.bookingId)
-                userBookingList.removeAt(position)
-                adapter.notifyItemRemoved(position)
+               viewModel.onDeleteClick(userBookingItem)
             }
         }
     }
 
-    private fun getUserBookingData() {
-        userBookingRepository.getAllBookings() { list ->
-            if (list.isNotEmpty()) {
-                userBookingList.clear()
-                userBookingList.addAll(list)
-                adapter.notifyDataSetChanged()
-            } else {
-                userBookingList.clear()
-                adapter.notifyDataSetChanged()
-                Toast.makeText(requireContext(), "no booking found!", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
+   private fun observeViewModel(){
+       viewModel.list.observe(viewLifecycleOwner){list->
+           if (list.isNotEmpty()) {
+               userBookingList.clear()
+               userBookingList.addAll(list)
+               adapter.notifyDataSetChanged()
+           } else {
+               userBookingList.clear()
+               adapter.notifyDataSetChanged()
+               Toast.makeText(requireContext(), "no booking found!", Toast.LENGTH_LONG).show()
+           }
+       }
+
+       viewModel.onDeleteEvent.observe(viewLifecycleOwner){userBookingItem->
+           val index = userBookingList.indexOf(userBookingItem)
+           if (index != -1) {
+               userBookingList.removeAt(index)
+               adapter.notifyItemRemoved(index)
+               viewModel.preformDelete(userBookingItem)
+           }
+       }
+   }
 }

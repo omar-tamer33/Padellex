@@ -38,16 +38,20 @@ class MapActivity : AppCompatActivity() , OnMapReadyCallback{
         courtNameTv.text = courtName
 
         getDirectionsBtn.setOnClickListener {
-            val intent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("http://maps.google.com/maps?daddr=$latitude,$longitude")
-            )
-            startActivity(intent)
+            navigateToGoogleMaps()
         }
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    private fun navigateToGoogleMaps() {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("http://maps.google.com/maps?daddr=$latitude,$longitude")
+        )
+        startActivity(intent)
     }
 
     private fun addCourtMarkerOnMap(latitude : Double , longitude : Double) {

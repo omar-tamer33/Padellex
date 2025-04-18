@@ -3,7 +3,7 @@ package com.example.padellex.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.padellex.Fragments.BookingFragment
+import com.example.padellex.Fragments.CourtsFragment
 import com.example.padellex.Fragments.HomeFragment
 import com.example.padellex.Fragments.ProfileFragment
 import com.example.padellex.R
@@ -17,18 +17,18 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        changeFragment(HomeFragment())
+        changeFragment(HomeFragment::class.java)
         binding.bottomNavBar.setOnItemSelectedListener { item ->
             when(item.itemId){
-                R.id.home -> changeFragment(HomeFragment())
-                R.id.profile -> changeFragment(ProfileFragment())
-                R.id.booking -> changeFragment(BookingFragment())
+                R.id.home -> changeFragment(HomeFragment::class.java)
+                R.id.profile -> changeFragment(ProfileFragment::class.java)
+                R.id.booking -> changeFragment(CourtsFragment::class.java)
             }
             true
         }
     }
 
-    private fun changeFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit()
+    private fun changeFragment(fragment: Class<out Fragment>) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment, fragment,null).commit()
     }
 }
