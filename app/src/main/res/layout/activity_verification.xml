@@ -6,38 +6,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.VerificationActivity"
-    android:background="@drawable/bg_splash">
+    android:background="@color/purple">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/verification"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textView"
+        android:layout_marginTop="25dp"
+        android:adjustViewBounds="true"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation_verification"
+        />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Verifiy your email"
+        android:text="@string/verifiy_your_email"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="25dp"
+        app:layout_constraintTop_toBottomOf="@id/verification"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@id/checkAgainBtn"
         />
 
     <Button
         android:id="@+id/checkAgainBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="check again"
+        android:text="@string/check_again"
+        app:backgroundTint="@null"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_profile_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView"
         />
 
     <ImageView
         android:id="@+id/back_arrow"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_margin="16dp"
         android:src="@drawable/ic_back_arrow"
         android:adjustViewBounds="true"

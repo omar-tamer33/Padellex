@@ -11,11 +11,13 @@ import javax.inject.Inject
 class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
     val courtRef = db.getReference("Court Information")
 
-    fun addCourt(court: CourtData) {
+    fun addCourt(court: CourtData , onComplete: (Boolean) -> Unit) {
         courtRef.child(court.id).setValue(court).addOnSuccessListener {
             Log.e("TAG", "addCourt successfully ", )
+            onComplete(true)
         }.addOnFailureListener {e->
             Log.e("TAG", "addCourt: error $e", )
+            onComplete(false)
         }
     }
 
@@ -27,6 +29,30 @@ class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
         }
     }
 
+    fun getCourtPublicId(id : String,onComplete : (String?) -> Unit) {
+        courtRef.child(id).child("publicId").get().addOnSuccessListener { snapShot ->
+            val publicId = snapShot.getValue(String::class.java)
+            onComplete(publicId)
+        }.addOnFailureListener { e ->
+            Log.e("TAG", "getUserPublicId: error $e",)
+            onComplete(null)
+        }
+    }
+
+    fun updateCourtImage(id: String, imageUrl: String, publicId: String): Boolean {
+        try {
+            val updates = mapOf(
+                "imageUrl" to imageUrl,
+                "publicId" to publicId
+            )
+            courtRef.child(id).updateChildren(updates)
+            return true
+        } catch (e: Exception) {
+            Log.e("TAG", "updateUserImage: error $e",)
+            return false
+        }
+    }
+
     fun updateCourt(court: CourtData, onComplete: (Boolean) -> Unit) {
         courtRef.child(court.id).setValue(court).addOnSuccessListener {
             onComplete(true)
@@ -35,11 +61,12 @@ class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
         }
     }
 
-    fun getCourtDetails(courtId: String, onComplete: (Boolean) -> Unit) {
+    fun getCourtDetails(courtId: String, onComplete: (CourtData?) -> Unit) {
         courtRef.child(courtId).get().addOnSuccessListener {
-            onComplete(true)
+            val courtData = it.getValue(CourtData::class.java)
+            onComplete(courtData)
         }.addOnFailureListener {
-            onComplete(false)
+            onComplete(null)
         }
     }
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.padellexadmin.Adapters.OnDeleteClickListener
@@ -48,10 +49,11 @@ class BookingFragment : Fragment() {
                userBookingList.clear()
                userBookingList.addAll(list)
                adapter.notifyDataSetChanged()
+               hideEmptyAnimation()
            } else {
                userBookingList.clear()
                adapter.notifyDataSetChanged()
-               Toast.makeText(requireContext(), "no booking found!", Toast.LENGTH_LONG).show()
+               showEmptyAnimation()
            }
        }
 
@@ -64,4 +66,16 @@ class BookingFragment : Fragment() {
            }
        }
    }
+
+    private fun showEmptyAnimation(){
+        binding.recyclerView.isVisible = false
+        binding.emptyTv.isVisible = true
+        binding.emptyAnimation.isVisible = true
+    }
+
+    private fun hideEmptyAnimation(){
+        binding.recyclerView.isVisible = true
+        binding.emptyTv.isVisible = false
+        binding.emptyAnimation.isVisible = false
+    }
 }

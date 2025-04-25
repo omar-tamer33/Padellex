@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivityLoginBinding
 import com.example.padellex.viewModels.LoginViewModel
@@ -65,6 +66,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun showLoadingAnimation(){
+        binding.loadingAnimation.isVisible = true
+    }
+
     private fun observeViewModel(){
         viewModel.success.observe(this){success->
             if (success){
@@ -78,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.isUserVerified.observe(this){userVerified ->
             if (userVerified){
+                showLoadingAnimation()
                 navigateToHome()
             }else{
                 navigateToVerification()

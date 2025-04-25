@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg_color"
     >
 
     <FrameLayout
@@ -10,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?attr/actionBarSize"
+        android:background="@color/bg_color"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,7 +20,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_plus"
         app:layout_anchor="@id/bottomAppBar"
-        app:backgroundTint="@color/Blue"
+        app:backgroundTint="@color/purple"
         android:layout_margin="18dp"
         app:tint="@color/white"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
@@ -30,6 +32,7 @@
        android:layout_height="wrap_content"
        android:layout_gravity="bottom"
        app:fabAnchorMode="cradle"
+       android:background="@color/white"
        app:fabAlignmentMode="center"
        app:fabCradleMargin="12dp"
        >

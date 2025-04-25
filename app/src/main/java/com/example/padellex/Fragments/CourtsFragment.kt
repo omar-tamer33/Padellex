@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.padellex.Adapters.CourtAdapter
@@ -46,11 +47,12 @@ class CourtsFragment : Fragment() {
     private fun observeViewModel(){
         viewModel.list.observe(viewLifecycleOwner){courtItemsList->
             if (courtItemsList.isNotEmpty()){
+                hideLoading()
                 mutableList.clear()
                 mutableList.addAll(courtItemsList)
                 adapter.notifyDataSetChanged()
             }else{
-                Toast.makeText(requireContext(),"no Courts found", Toast.LENGTH_LONG).show()
+                showLoading()
             }
         }
     }
@@ -59,5 +61,15 @@ class CourtsFragment : Fragment() {
         val intent = Intent(requireContext(), BookingActivity::class.java)
         intent.putExtra("court",courtItem)
         startActivity(intent)
+    }
+
+    private fun showLoading(){
+        binding.recyclerView.isVisible = false
+        binding.loading.isVisible = true
+    }
+
+    private fun hideLoading(){
+        binding.recyclerView.isVisible = true
+        binding.loading.isVisible = false
     }
 }

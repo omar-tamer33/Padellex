@@ -2,82 +2,109 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="upload"
+        android:text="@string/upload"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="@color/purple"
         android:gravity="center"
         />
 
-    <TextView
-        android:id="@+id/courtname"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/courtNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="courtname"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtnameEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:hint="@string/court_name"
+        >
 
-    <TextView
-        android:id="@+id/courtlocationTV"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/courtNameEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/courtLocationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="location"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtlocationEt"
+        android:hint="@string/court_location"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/courtLocationEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/courtPriceLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/courtpriceTV"
+        android:hint="@string/court_price"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/courtPriceEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/courtLatitudeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="price"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtpriceEt"
+        android:hint="@string/court_latitude"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/courtLatitudeEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/courtLongitudeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/courtLatitudeTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="latitude"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtLatitudeEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/courtLongitudeTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="longitude"
-        android:gravity="center"
-        />
-    <EditText
-        android:id="@+id/courtLongitudeEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <Button
-        android:id="@+id/savebtn"
+        android:hint="@string/court_longitude"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/courtLongitudeEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="save"
+        android:text="@string/add"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        app:backgroundTint="@null"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_button"
         android:layout_gravity="center"
         />
 

@@ -18,15 +18,17 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:contentPadding="15dp"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="10dp"
         >
         <Button
             android:id="@+id/getDirectionsBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:text="get directions"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_button"
+            android:text="@string/directions"
+            android:drawableEnd="@drawable/ic_directions"
             />
         <TextView
             android:id="@+id/courtNameTv"
@@ -35,9 +37,9 @@
             android:layout_gravity="start"
             tools:text="court#1"
             android:textColor="@color/black"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             />
 
     </androidx.cardview.widget.CardView>

@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.view)
+    implementation(libs.lottie)
     implementation(libs.cloudinary.android)
     implementation(libs.glide)
     implementation(libs.circleimageview)

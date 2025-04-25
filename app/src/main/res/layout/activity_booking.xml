@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.BookingActivity">
+    tools:context=".activities.BookingActivity"
+    android:background="@color/bg_color">
 
     <ImageView
         android:id="@+id/courtImage"
@@ -32,18 +33,93 @@
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
+        android:layout_marginStart="30dp"
         tools:listitem="@layout/item_time_slot"
         app:layout_constraintTop_toBottomOf="@id/weekCalendarView"
         app:layout_constraintBottom_toTopOf="@id/cardView"
         />
 
-    <Button
+    <ImageView
         android:id="@+id/mapBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="see location on map"
+        android:src="@drawable/ic_directions"
+        android:padding="12dp"
+        android:background="@drawable/bg_button"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/courtImage"
+        />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_bg"
+        app:layout_constraintTop_toTopOf="@id/courtImage"
+        app:layout_constraintStart_toStartOf="@id/courtImage"
+        app:layout_constraintEnd_toEndOf="@id/courtImage"
+        app:layout_constraintBottom_toBottomOf="@id/courtImage"
+        />
+    <TextView
+        android:id="@+id/courtNameTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Court 1"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toTopOf="@id/courtLocationTv"
+        app:layout_constraintStart_toStartOf="@id/courtImage"
+        />
+
+    <TextView
+        android:id="@+id/courtLocationTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        tools:text="Alexandria , Miami"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/courtImage"
+        app:layout_constraintStart_toStartOf="@id/courtImage"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_1h_from"
+        android:textColor="@color/gray"
+        android:textSize="16sp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="@id/courtImage"
+        app:layout_constraintBottom_toTopOf="@id/courtPriceTv"
+        />
+
+    <TextView
+        android:id="@+id/courtPriceTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        tools:text="300"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toStartOf="@id/egp"
+        app:layout_constraintBottom_toBottomOf="@id/courtImage"
+        />
+
+    <TextView
+        android:id="@+id/egp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/egp"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@id/courtImage"
+        app:layout_constraintBottom_toBottomOf="@id/courtImage"
         />
 
     <androidx.cardview.widget.CardView
@@ -51,7 +127,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:cardCornerRadius="26dp"
+        app:cardCornerRadius="10dp"
         app:contentPadding="12dp"
         >
 
@@ -62,16 +138,18 @@
             android:text="@string/_0_0_egp"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:layout_gravity="start"
+            android:layout_gravity="start|center"
             />
 
         <Button
             android:id="@+id/bookBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Book"
+            android:backgroundTint="@null"
+            android:background="@drawable/bg_button"
+            android:text="Book Now"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_gravity="end"
+            android:layout_gravity="end|center"
             />
 
     </androidx.cardview.widget.CardView>
