@@ -4,7 +4,7 @@
     <string name="login">LOGIN</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="forget_your_password">Forget your password</string>
+    <string name="forget_your_password">Forget password?</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
     <string name="error">You have entered an invalid username or password</string>
     <string name="register">REGISTER</string>
@@ -23,4 +23,21 @@
     <string name="first_name">First Name</string>
     <string name="chats">Chats</string>
     <string name="_0_0_egp">0.0 EGP</string>
+    <string name="_1h_from">1h from</string>
+    <string name="logout">Logout</string>
+    <string name="edit_your_profile">Edit your profile</string>
+    <string name="upcoming_reservation">Upcoming Reservation</string>
+    <string name="directions">DIRECTIONS</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="enter_email_adderess_associated_with_your_account_and_we_will_send_email_with_instruction_to_reset_your_password">Enter email adderess associated with your account and we will send email with instruction to reset your password</string>
+    <string name="verifiy_your_email">Verifiy your email</string>
+    <string name="check_again">Check again</string>
+    <string name="success">Success!</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="save">Save</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="password_doesn_t_match">password doesn\'t match</string>
+    <string name="new_password">New password</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>

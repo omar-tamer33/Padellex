@@ -22,9 +22,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.showYourBookingBtn.setOnClickListener {
-            val intent = Intent(requireContext(),UserBookingActivity::class.java)
-            startActivity(intent)
-        }
+
     }
 }

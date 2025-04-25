@@ -10,6 +10,17 @@
     <string name="egp">EGP</string>
     <string name="home">HOME</string>
     <string name="booking">BOOKING</string>
+    <string name="_1h_from">1h from</string>
+    <string name="_0_0_egp">0.0 EGP</string>
+    <string name="book_now">Book Now</string>
+    <string name="court_name">Court Name</string>
+    <string name="court_location">Court Location</string>
+    <string name="court_price">Court Price</string>
+    <string name="court_latitude">Court Latitude</string>
+    <string name="court_longitude">Court Longitude</string>
+    <string name="add">Add</string>
+    <string name="upload">Upload</string>
+    <string name="required">required</string>
 
 
 </resources>

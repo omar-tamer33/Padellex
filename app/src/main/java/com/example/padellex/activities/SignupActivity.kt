@@ -1,10 +1,12 @@
 package com.example.padellex.activities
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivitySignupBinding
 import com.example.padellex.viewModels.SignupViewModel
@@ -75,6 +77,27 @@ class SignupActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+    private fun showAnimation(){
+        binding.createAccountAnimation.isVisible = true
+        binding.createAccountAnimation.repeatCount = 0
+        binding.createAccountAnimation.addAnimatorListener(object : Animator.AnimatorListener{
+            override fun onAnimationStart(animation: Animator) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                navigateToVerification()
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
+            }
+
+        })
+        binding.createAccountAnimation.playAnimation()
+    }
 
     private fun observeViewModel(){
         viewModel.errorMessage.observe(this){error ->
@@ -87,7 +110,7 @@ class SignupActivity : AppCompatActivity() {
 
         viewModel.isUserRegistered.observe(this){ userRegistered ->
             if (userRegistered){
-                navigateToVerification()
+                showAnimation()
             }
         }
     }

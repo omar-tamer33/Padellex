@@ -6,21 +6,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
+import com.example.padellex.Repositories.UserBookingRepository
 import com.example.padellex.Repositories.UserRepository
 import com.example.padellex.model.UserInfo
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val userRepository: UserRepository , private val cloudinary: Cloudinary) : ViewModel() {
+class ProfileViewModel @Inject constructor(private val userBookingRepository: UserBookingRepository , private val userRepository: UserRepository , private val cloudinary: Cloudinary , private val auth : FirebaseAuth) : ViewModel() {
     val success = MutableLiveData<Boolean>()
     val isImageAdded = MutableLiveData<Boolean>()
     val url = MutableLiveData<String>()
     val userInfoItem = MutableLiveData<UserInfo?>()
+    val passwordSuccess = MutableLiveData<Boolean>()
 
 
 
@@ -33,6 +37,24 @@ class ProfileViewModel @Inject constructor(private val userRepository: UserRepos
                  success.postValue(false)
              }
          }
+    }
+
+    fun updatePassword(password : String){
+        viewModelScope.launch {
+            try {
+                auth.currentUser?.updatePassword(password)
+                passwordSuccess.postValue(true)
+            } catch (e: Exception) {
+                passwordSuccess.postValue(false)
+            }
+        }
+    }
+
+    fun deleteAccount(userId: String){
+        viewModelScope.launch {
+            auth.currentUser?.delete()?.await()
+            userRepository.deleteUser(userId)
+        }
     }
 
      fun uploadImage(inputStream: InputStream?,userId: String) {

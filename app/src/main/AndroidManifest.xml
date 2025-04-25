@@ -19,6 +19,9 @@
         android:theme="@style/Theme.Padellex"
         tools:targetApi="31">
         <activity
+            android:name=".activities.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.UserBookingActivity"
             android:exported="false" />
         <activity

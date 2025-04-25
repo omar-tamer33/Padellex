@@ -64,23 +64,38 @@ class UserRepository @Inject constructor(db : FirebaseDatabase) {
              }
          }
 
-         fun deleteUser(id: String, onComplete: (Boolean) -> Unit) {
-             userRef.child(id).removeValue().addOnSuccessListener {
-                 onComplete(true)
-             }.addOnFailureListener {
-                 onComplete(false)
-             }
-         }
+       suspend fun incUserStrikes(userId : String) : Boolean{
+           try {
+               val snapShot = userRef.child(userId).child("strikesCount").get().await()
+               Log.e("TAG", "incUserStrikes: $snapShot", )
+               val currentStrikesCount = snapShot.getValue(Int::class.java)
+               userRef.child(userId).child("strikesCount").setValue(currentStrikesCount?.inc()).await()
+               return true
+           }catch (e : Exception){
+               Log.e("TAG", "userStrikes: error $e", )
+               return false
+           }
+       }
 
-         fun getAllUsers(onComplete: (List<UserInfo>) -> Unit) {
-             userRef.get().addOnSuccessListener { snapShot ->
-                 val userList = mutableListOf<UserInfo>()
-                 for (child in snapShot.children) {
-                     child.getValue(UserInfo::class.java)?.let { userList.add(it) }
-                 }
-                 onComplete(userList)
-             }.addOnFailureListener {
-                 onComplete(emptyList())
+    suspend fun checkUserStrikes(userId: String) : Int?{
+        try {
+            val snapShot = userRef.child(userId).child("strikesCount").get().await()
+            val currentStrikesCount = snapShot.getValue(Int::class.java)
+            Log.e("TAG", "checkUserStrikes: $currentStrikesCount", )
+            return currentStrikesCount
+        }catch (e : Exception){
+            Log.e("TAG", "checkUserStrikes: error $e", )
+            return null
+        }
+    }
+
+         suspend fun deleteUser(id: String) : Boolean{
+             try {
+                 userRef.child(id).removeValue().await()
+                 return true
+             }catch (e : Exception){
+                 Log.e("TAG", "deleteUser: error $e", )
+                 return false
              }
          }
      }

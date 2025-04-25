@@ -3,6 +3,7 @@ package com.example.padellexadmin.activities
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -17,6 +18,7 @@ import com.example.padellexadmin.fragments.BottomSheetFragment
 import com.example.padellexadmin.fragments.CourtsFragment
 import com.example.padellexadmin.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -39,6 +41,7 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         changeFragment(CourtsFragment::class.java)
+        observeViewModel()
 
         binding.bottomNavBar.setOnItemSelectedListener { id ->
             when(id.itemId){
@@ -49,7 +52,17 @@ class HomeActivity : AppCompatActivity() {
         }
 
         binding.addFab.setOnClickListener {
-            val bottomSheetFragment = BottomSheetFragment()
+            val bottomSheetFragment = BottomSheetFragment(){courtName,courtLocation,courtPrice,courtLatitude,courtLongitude->
+                val id = UUID.randomUUID().toString()
+                viewModel.addCourtInDatabase(
+                    courtName,
+                    courtLocation,
+                    courtPrice.toDouble(),
+                    courtLatitude.toDouble(),
+                    courtLongitude.toDouble(),
+                    id
+                )
+            }
             bottomSheetFragment.show(supportFragmentManager,"BottomSheetFragment")
         }
 
@@ -106,6 +119,16 @@ class HomeActivity : AppCompatActivity() {
 
     private fun changeFragment(fragment: Class<out Fragment>){
         supportFragmentManager.beginTransaction().replace(R.id.fragmentLayout,fragment,null).commit()
+    }
+
+    private fun observeViewModel(){
+        viewModel.isAdded.observe(this){isAdded->
+            if (isAdded){
+                Toast.makeText(this,"Court Added successfully!",Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(this,"Failed to Add Court!",Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
 }

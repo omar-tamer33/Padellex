@@ -19,6 +19,8 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.padellex.activities.LoginActivity
 import com.example.padellex.R
+import com.example.padellex.activities.EditProfileActivity
+import com.example.padellex.activities.UserBookingActivity
 import com.example.padellex.databinding.FragmentProfileBinding
 import com.example.padellex.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -30,30 +32,6 @@ class ProfileFragment : Fragment() {
     val viewModel : ProfileViewModel by viewModels()
     @Inject lateinit var auth : FirebaseAuth
     lateinit var binding: FragmentProfileBinding
-    private val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        Manifest.permission.READ_MEDIA_IMAGES
-    } else {
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    }
-    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            val inputStream = requireContext().contentResolver.openInputStream(uri)
-            viewModel.uploadImage(inputStream,auth.currentUser!!.uid)
-        } else {
-            Toast.makeText(requireContext(),"Select image to add",Toast.LENGTH_LONG).show()
-        }
-    }
-    val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-               updateProfileImage()
-            } else {
-               showRationalDialog()
-            }
-        }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,89 +44,45 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getUserInformation(auth.currentUser!!.uid)
         observeViewModel()
-       viewModel.getUserInformation(auth.currentUser!!.uid)
 
-        binding.saveBtn.setOnClickListener {
-            val phone = binding.userPhoneEt.text.toString()
-            val userId = auth.currentUser!!.uid
-            viewModel.updateUserInformation(userId,phone)
+        binding.upcomingReservationBtn.setOnClickListener {
+           navigateToUserReservation()
         }
+
+        binding.editProfileBtn.setOnClickListener {
+            navigateToEditProfile()
+        }
+
+
 
         binding.signoutBtn.setOnClickListener {
             auth.signOut()
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            startActivity(intent)
+            navigateToLogin()
             activity?.finish()
         }
 
-        binding.profileImage.setOnClickListener {
-            checkPermissionGranted(storagePermission)
-        }
+
     }
 
-    private fun showRationalDialog() {
-        dialog(title = "Why we need this permission ?" , message = "We need this permission to update profile image" , positiveBtnText = "yes, i understand", onPositiveClick = {
-            requestPermissionLauncher.launch(storagePermission)
-        }, negativeBtnText = "no, i refuse")
+    private fun navigateToLogin(){
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        startActivity(intent)
     }
 
-    private fun dialog(title: String, message: String, positiveBtnText: String, onPositiveClick: () -> Unit?, negativeBtnText: String? = null, onNegativeClick: (() -> Unit?)? = null) {
-        val alertDialog = AlertDialog.Builder(requireContext())
-        alertDialog.setTitle(title).setMessage(message).setPositiveButton(positiveBtnText){ dialog , which ->
-            onPositiveClick()
-            dialog.dismiss()
-        }
-        if (negativeBtnText != null) {
-            alertDialog.setNegativeButton(negativeBtnText) { dialog , which ->
-                onNegativeClick?.invoke()
-                dialog.dismiss()
-            }
-        }
-        alertDialog.show()
+    private fun navigateToUserReservation(){
+        val intent = Intent(requireContext(), UserBookingActivity::class.java)
+        startActivity(intent)
     }
 
-    private fun updateProfileImage() {
-        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    private fun navigateToEditProfile(){
+        val intent = Intent(requireContext(),EditProfileActivity::class.java)
+        startActivity(intent)
     }
-
-
-
-
-
-    private fun checkPermissionGranted(permission : String){
-       when{
-           ContextCompat.checkSelfPermission(requireContext(),permission) == PackageManager.PERMISSION_GRANTED -> {
-               updateProfileImage()
-           }
-           ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),permission) -> {
-               showRationalDialog()
-           }
-           else -> {
-               requestPermissionLauncher.launch(permission)
-           }
-       }
-    }
-
 
 
     private fun observeViewModel(){
-        viewModel.success.observe(viewLifecycleOwner){success->
-            if (success){
-                Toast.makeText(requireContext(),"your information updated successfully", Toast.LENGTH_LONG).show()
-            }else{
-                Toast.makeText(requireContext(),"Failed to update information!", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        viewModel.isImageAdded.observe(viewLifecycleOwner){imageAdded->
-            if (imageAdded) {
-                Toast.makeText(requireContext(),"Image added successfully", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(requireContext(),"Failed to upload image", Toast.LENGTH_LONG).show()
-            }
-        }
-
         viewModel.url.observe(viewLifecycleOwner){imageUrl->
             if (isAdded) {
                 Glide.with(requireContext())
@@ -162,12 +96,10 @@ class ProfileFragment : Fragment() {
             userInfo?.let {
                 val firstName = userInfo.firstName
                 val lastName = userInfo.lastName
-                val phone = userInfo.phone
                 val imageUrl = userInfo.imageUrl
 
                 binding.userEmailTv.text = auth.currentUser!!.email.toString()
                 binding.userNameTv.text = "$firstName $lastName"
-                binding.userPhoneEt.setText(phone)
                 if (isAdded) {
                     Glide.with(requireContext())
                         .load(imageUrl)

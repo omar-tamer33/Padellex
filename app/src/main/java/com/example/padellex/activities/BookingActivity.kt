@@ -2,8 +2,12 @@ package com.example.padellex.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.padellex.Adapters.TimeAdapter
 import com.example.padellex.R
@@ -13,6 +17,7 @@ import com.example.padellex.viewContainer.CustomWeekDayBinder
 import com.example.padellex.viewModels.BookingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+
 
 @AndroidEntryPoint
 class BookingActivity : AppCompatActivity() {
@@ -33,6 +38,9 @@ class BookingActivity : AppCompatActivity() {
         }
         binding.timeSlotRv.adapter = adapter
         courtItem = intent.getParcelableExtra("court")
+        binding.courtNameTv.text = courtItem?.courtName
+        binding.courtLocationTv.text = courtItem?.courtLocation
+        binding.courtPriceTv.text = courtItem?.courtPrice.toString()
         initCalendar()
         observeViewModel()
 
@@ -49,19 +57,26 @@ class BookingActivity : AppCompatActivity() {
         binding.bookBtn.setOnClickListener {
             val selectedSlots = adapter.getSelectedSlots()
             if (selectedSlots.isEmpty()){
-                Toast.makeText(this,"select time to book!",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"select time to book!", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             viewModel.bookSlots(selectedSlots, courtItem!!, weekDayBinder.selectedDate.toString())
-            Toast.makeText(this,"Booking successful!",Toast.LENGTH_LONG).show()
+            showAlertDialog()
         }
     }
 
-    fun initCalendar(){
+    private fun showAlertDialog(){
+        val dialogSuccess = LayoutInflater.from(this).inflate(R.layout.dialog_success,null)
+        val alertDialog = AlertDialog.Builder(this@BookingActivity,).setView(dialogSuccess).create()
+        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        alertDialog.show()
+        Handler(Looper.getMainLooper()).postDelayed({alertDialog.dismiss()},3000)
+    }
+    private fun initCalendar(){
         val firstDayOfWeek = currentDate.dayOfWeek
         binding.weekCalendarView.setup(currentDate, currentDate, firstDayOfWeek)
         binding.weekCalendarView.scrollToWeek(currentDate)
-        weekDayBinder = CustomWeekDayBinder(selectedColor = resources.getColor(R.color.Blue,null) , unSelectedColor = resources.getColor(R.color.black,null)) { weekDay ->
+        weekDayBinder = CustomWeekDayBinder(selectedColor = resources.getColor(R.color.purple,null) , unSelectedColor = resources.getColor(R.color.black,null)) { weekDay ->
             val currentSelection = weekDayBinder.selectedDate
             if (currentSelection != weekDay.date) {
                 weekDayBinder.selectedDate = weekDay.date
@@ -80,7 +95,7 @@ class BookingActivity : AppCompatActivity() {
         viewModel.list.observe(this) { timeSlots ->
             adapter.updateAdapter(timeSlots)
             adapter.clearSelections()
-            binding.priceCalcTv.text = "0.0 EGP"
+            binding.priceCalcTv.setText(R.string._0_0_egp)
         }
     }
 }

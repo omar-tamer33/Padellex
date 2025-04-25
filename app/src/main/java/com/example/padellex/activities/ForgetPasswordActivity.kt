@@ -1,12 +1,19 @@
 package com.example.padellex.activities
 
+import android.animation.Animator
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivityForgetPasswordBinding
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,8 +39,31 @@ class ForgetPasswordActivity : AppCompatActivity() {
         }
     }
 
+    private fun showAnimation(){
+        binding.emailSentAnimation.isVisible = true
+        binding.emailSentAnimation.repeatCount = 0
+        binding.emailSentAnimation.addAnimatorListener(object : Animator.AnimatorListener{
+            override fun onAnimationStart(animation: Animator) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                binding.emailSentAnimation.isVisible = false
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
+            }
+
+        })
+        binding.emailSentAnimation.playAnimation()
+    }
+
     private fun sendForgetPasswordLink(email: String) {
         auth.sendPasswordResetEmail(email).addOnSuccessListener {
+            showAnimation()
             Toast.makeText(this,"Reset Email sent",Toast.LENGTH_LONG).show()
         }.addOnFailureListener { e ->
             Toast.makeText(this,"${e.message}",Toast.LENGTH_LONG).show()

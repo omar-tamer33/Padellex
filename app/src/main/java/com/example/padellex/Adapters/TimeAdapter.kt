@@ -5,13 +5,13 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView.Adapter
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView
 import com.example.padellex.R
 import com.example.padellex.databinding.ItemTimeSlotBinding
 import com.example.padellex.model.TimeSlot
 
-class TimeAdapter(val timeList: MutableList<TimeSlot>) : Adapter<TimeViewHolder>() {
+
+class TimeAdapter(val timeList: MutableList<TimeSlot>) : RecyclerView.Adapter<TimeViewHolder>() {
     var onSelectionChanged: (() -> Unit)? = null
     private val selectedItems = mutableSetOf<Int>()
     private val selectedSlots = mutableListOf<TimeSlot>()
@@ -46,13 +46,11 @@ class TimeAdapter(val timeList: MutableList<TimeSlot>) : Adapter<TimeViewHolder>
         holder.bindIsClosed(item.booked)
         if (!item.booked) {
             if (selectedItems.contains(position)) {
-                holder.itemView.setBackgroundColor(
-                    ContextCompat.getColor(holder.itemView.context, R.color.Cyan)
+                holder.binding.timeSlot.setBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.context, R.color.purple)
                 )
             } else {
-                holder.itemView.setBackgroundColor(
-                    ContextCompat.getColor(holder.itemView.context, R.color.white)
-                )
+                holder.binding.timeSlot.setBackgroundResource(R.drawable.bg_profile_button)
             }
         }
 
@@ -72,7 +70,7 @@ class TimeAdapter(val timeList: MutableList<TimeSlot>) : Adapter<TimeViewHolder>
     }
 
 
-class TimeViewHolder(val binding: ItemTimeSlotBinding) : ViewHolder(binding.root){
+class TimeViewHolder(val binding: ItemTimeSlotBinding) : RecyclerView.ViewHolder(binding.root){
     fun bind(item: TimeSlot) {
         binding.timeSlot.text = item.timeKey
     }

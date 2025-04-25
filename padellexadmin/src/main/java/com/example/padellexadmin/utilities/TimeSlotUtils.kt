@@ -12,7 +12,7 @@ object TimeSlotUtils {
         sdf.timeZone = TimeZone.getDefault()
 
         for (hour in startHour..endHour) {
-            val period = if (hour < 12) "AM" else "PM"
+            val period = if (hour < 12) "am" else "pm"
             val displayHour = if (hour % 12 == 0) 12 else hour % 12
 
             val timeKey = String.format("%02d:00 %s", displayHour, period)

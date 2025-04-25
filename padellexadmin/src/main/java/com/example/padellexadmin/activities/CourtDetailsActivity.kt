@@ -8,6 +8,7 @@ import com.example.padellexadmin.Adapters.OnTimeClickListener
 import com.example.padellexadmin.Adapters.TimeAdapter
 import com.example.padellexadmin.R
 import com.example.padellexadmin.databinding.ActivityCourtDetailsBinding
+import com.example.padellexadmin.fragments.BottomSheetFragment
 import com.example.padellexadmin.model.CourtData
 import com.example.padellexadmin.model.TimeSlot
 import com.example.padellexadmin.viewModels.CourtDetailsViewModel
@@ -36,11 +37,19 @@ class CourtDetailsActivity : AppCompatActivity() {
 
         }
         courtData = intent.getParcelableExtra("courtData")!!
+        viewModel.getCourtDetails(courtData.id)
         observeViewModel()
         initCalendar()
         viewModel.generateTodaySlotsIfNeeded(courtData.id,currentDate.toString())
         viewModel.generateTimeSlotsForDate(currentDate.toString(),courtData.id)
 
+        binding.editFab.setOnClickListener {
+            val bottomSheetFragment = BottomSheetFragment(courtName = courtData.courtName , courtPrice = courtData.courtPrice.toString() , courtLocation = courtData.courtLocation , courtLongitude = courtData.longitude.toString() , courtLatitude = courtData.latitude.toString()){ courtName, courtLocation, courtPrice, courtLatitude, courtLongitude ->
+                viewModel.updateCourt(CourtData(courtData.id,courtName,courtPrice.toDouble(),courtLocation,false,courtLatitude.toDouble(),courtLongitude.toDouble()))
+                viewModel.getCourtDetails(courtData.id)
+            }
+            bottomSheetFragment.show(supportFragmentManager,"BottomSheetFragment")
+        }
 
 
     }
@@ -49,7 +58,7 @@ class CourtDetailsActivity : AppCompatActivity() {
         val firstDayOfWeek = currentDate.dayOfWeek
         binding.weekCalendarView.setup(currentDate, currentDate, firstDayOfWeek)
         binding.weekCalendarView.scrollToWeek(currentDate)
-            weekDayBinder = CustomWeekDayBinder(selectedColor = resources.getColor(R.color.Blue,null) , unSelectedColor = resources.getColor(R.color.black,null)) { weekDay ->
+            weekDayBinder = CustomWeekDayBinder(selectedColor = resources.getColor(R.color.purple,null) , unSelectedColor = resources.getColor(R.color.black,null)) { weekDay ->
                 val currentSelection = weekDayBinder.selectedDate
                 if (currentSelection != weekDay.date) {
                     weekDayBinder.selectedDate = weekDay.date
@@ -68,6 +77,15 @@ class CourtDetailsActivity : AppCompatActivity() {
     private fun observeViewModel(){
         viewModel.list.observe(this){timeSlots->
             adapter.updateAdapter(timeSlots)
+        }
+
+        viewModel.courtDataSuccess.observe(this){courtDetails->
+            if (courtDetails != null) {
+                courtData = courtDetails
+                binding.courtNameTv.text = courtData.courtName
+                binding.courtLocationTv.text = courtData.courtLocation
+                binding.courtPriceTv.text = courtData.courtPrice.toString()
+            }
         }
     }
 }

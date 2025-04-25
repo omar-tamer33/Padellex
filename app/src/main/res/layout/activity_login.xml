@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity"
-    android:background="@drawable/bg_splash"
+    android:background="@color/purple"
     >
 
     <TextView
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login"
-                android:textColor="@color/Cyan"
+                android:textColor="@color/purple"
                 android:textSize="36sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/forget_your_password"
-                android:textColor="@color/Cyan"
+                android:textColor="@color/purple"
                 app:layout_constraintTop_toBottomOf="@id/passwordLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
@@ -123,7 +123,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/don_t_have_an_account_sign_up"
-                android:textColor="@color/Cyan"
+                android:textColor="@color/purple"
                 app:layout_constraintTop_toBottomOf="@id/loginBtn"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -133,6 +133,18 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingAnimation"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            app:lottie_rawRes="@raw/animation_loading"
+            />
 
     </androidx.cardview.widget.CardView>
 
