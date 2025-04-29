@@ -53,10 +53,20 @@ class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
         }
     }
 
+
     fun updateCourt(court: CourtData, onComplete: (Boolean) -> Unit) {
-        courtRef.child(court.id).setValue(court).addOnSuccessListener {
+        try {
+            val updates = mapOf(
+                "courtLocation" to court.courtLocation,
+                "courtName" to court.courtName,
+                "courtPrice" to court.courtPrice,
+                "latitude" to court.latitude,
+                "longitude" to court.longitude
+            )
+            courtRef.child(court.id).updateChildren(updates)
             onComplete(true)
-        }.addOnFailureListener {
+        } catch (e: Exception) {
+            Log.e("TAG", "updateUserImage: error $e",)
             onComplete(false)
         }
     }
@@ -86,5 +96,15 @@ class CourtsRepository @Inject constructor(db : FirebaseDatabase) {
             }
 
         })
+    }
+
+    fun getCourtUrl(courtId: String, onComplete: (String?) -> Unit) {
+        courtRef.child(courtId).child("imageUrl").get().addOnSuccessListener {
+            val imageUrl = it.getValue(String::class.java)
+            onComplete(imageUrl)
+        }.addOnFailureListener {
+            onComplete(null)
+            Log.e("TAG", "getCourtUrl: error $it", )
+        }
     }
 }

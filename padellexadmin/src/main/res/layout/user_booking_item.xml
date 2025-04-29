@@ -4,55 +4,67 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    app:cardCornerRadius="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <ImageView
-            android:id="@+id/deleteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_button"
-            android:padding="10dp"
-            android:src="@drawable/ic_remove"
-            android:layout_margin="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.3"
+            android:background="@color/pink"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bookingDateTv"
             />
+
 
         <TextView
             android:id="@+id/courtNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Court : Court#1"
+            app:layout_constraintStart_toStartOf="@id/view"
+            app:layout_constraintTop_toTopOf="@id/view"
+            app:layout_constraintBottom_toTopOf="@id/courtPriceTv"
+            android:textStyle="bold"
+            tools:text="Court#1"
             android:textColor="@color/black"
             android:textSize="26sp"
+            android:layout_marginStart="16dp"
             />
 
         <TextView
             android:id="@+id/courtPriceTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/view"
             app:layout_constraintTop_toBottomOf="@id/courtNameTv"
-            tools:text="Price : 70"
+            app:layout_constraintBottom_toBottomOf="@id/view"
+            android:textStyle="bold"
+            tools:text="70 EGP"
             android:textColor="@color/black"
             android:textSize="26sp"
+            android:layout_marginStart="16dp"
             />
 
         <TextView
             android:id="@+id/bookingDateTv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/courtPriceTv"
-            tools:text="Date : 25/5/2025"
+            app:layout_constraintTop_toBottomOf="@id/view"
+            app:layout_constraintBottom_toTopOf="@id/bookingTimeTv"
+            tools:text="25/5/2025"
+            android:drawableStart="@drawable/ic_date"
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="26sp"
+            android:layout_margin="8dp"
             />
 
         <TextView
@@ -61,10 +73,15 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bookingDateTv"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Time : [7:00 PM - 8:00 PM]"
+            app:layout_constraintBottom_toTopOf="@id/courtLocationTv"
+            tools:text="7:00 PM - 8:00 PM"
+            android:drawableStart="@drawable/ic_clock"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="26sp"
+            android:layout_marginStart="8dp"
+            android:drawablePadding="8dp"
+            android:layout_marginBottom="8dp"
             />
 
         <TextView
@@ -73,13 +90,29 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bookingTimeTv"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Location : alexandria - sidi gaber"
+            app:layout_constraintBottom_toTopOf="@id/deleteBtn"
+            android:textStyle="bold"
+            tools:text="alexandria - sidi gaber"
+            android:drawableStart="@drawable/ic_location"
             android:textColor="@color/black"
             android:textSize="26sp"
+            android:layout_marginStart="8dp"
+            android:drawablePadding="8dp"
             />
 
+        <Button
+            android:id="@+id/deleteBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:textSize="18sp"
+            app:backgroundTint="@null"
+            android:text="@string/cancel"
+            app:layout_constraintTop_toBottomOf="@id/courtLocationTv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,21 +6,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SplashActivity"
-    android:background="@color/purple"
+    android:background="@drawable/gradient_splash"
     >
 
-    <TextView
+    <ImageView
+        android:id="@+id/logoImgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/padellex"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="46sp"
-        android:fontFamily="@font/monainnregular"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/img_logo"
+        app:layout_constraintStart_toStartOf="@id/padellexTv"
+        app:layout_constraintEnd_toEndOf="@id/padellexTv"
+        app:layout_constraintBottom_toTopOf="@id/padellexTv"
+        />
+
+    <ImageView
+        android:id="@+id/padellexTv"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:adjustViewBounds="true"
+        android:layout_marginVertical="5dp"
+        android:src="@drawable/img_padellex"
+        app:layout_constraintBottom_toTopOf="@id/welcomeTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+
+        />
+
+    <TextView
+        android:id="@+id/welcomeTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_to_padellex_community"
+        android:fontFamily="@font/inter__semi_bold"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/padellexTv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/padellexTv"
+        app:layout_constraintEnd_toEndOf="@id/padellexTv"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

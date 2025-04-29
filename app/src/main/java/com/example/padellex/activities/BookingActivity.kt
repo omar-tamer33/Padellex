@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.padellex.Adapters.TimeAdapter
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivityBookingBinding
@@ -41,6 +42,10 @@ class BookingActivity : AppCompatActivity() {
         binding.courtNameTv.text = courtItem?.courtName
         binding.courtLocationTv.text = courtItem?.courtLocation
         binding.courtPriceTv.text = courtItem?.courtPrice.toString()
+        Glide.with(this)
+            .load(courtItem?.imageUrl)
+            .placeholder(R.drawable.court)
+            .into(binding.courtImage)
         initCalendar()
         observeViewModel()
 

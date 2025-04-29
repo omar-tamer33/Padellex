@@ -30,6 +30,14 @@ class UserBookingRepository @Inject constructor(db : FirebaseDatabase) {
         }
     }
 
+    fun deleteAllUserBooking(userId: String){
+        userBookingRef.child(userId).removeValue().addOnSuccessListener {
+            Log.e("TAG", "deleteUserBooking: user booking removed successfully")
+        }.addOnFailureListener {
+            Log.e("TAG", "deleteUserBooking: user booking failed to remove", )
+        }
+    }
+
      fun getAllUserBookingByDate(userId: String,dateStr : String,onComplete : (List<UserBookingItem>) -> Unit){
             val userBookingItemList = mutableListOf<UserBookingItem>()
             userBookingRef.child(userId).addValueEventListener(object : ValueEventListener{

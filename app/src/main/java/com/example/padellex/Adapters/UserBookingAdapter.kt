@@ -34,7 +34,7 @@ class UserBookingItemViewHolder(val binding: UserBookingItemBinding) : ViewHolde
         binding.bookingTimeTv.text = userBookingItem.bookingTime.toString()
         binding.courtNameTv.text = userBookingItem.courtName
         binding.courtLocationTv.text = userBookingItem.courtLocation
-        binding.courtPriceTv.text = userBookingItem.courtPrice
+        binding.courtPriceTv.text = "${userBookingItem.courtPrice} EGP"
     }
 
 }

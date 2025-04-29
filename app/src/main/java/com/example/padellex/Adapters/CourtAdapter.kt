@@ -3,9 +3,11 @@ package com.example.padellex.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.example.padellex.model.CourtItem
 import com.example.padellex.R
 
@@ -33,10 +35,15 @@ class CourtAdapter(val mutableList: MutableList<CourtItem>) : Adapter<CourtAdapt
         private val courtName : TextView = itemView.findViewById(R.id.courtNameTv)
         private val courtPrice : TextView = itemView.findViewById(R.id.courtPriceTv)
         private val courtLocation : TextView = itemView.findViewById(R.id.courtLocationTv)
+        private val courtImage : ImageView = itemView.findViewById(R.id.courtImage)
         fun bind(courtItem: CourtItem) {
             courtName.text = courtItem.courtName
             courtPrice.text = courtItem.courtPrice.toString()
             courtLocation.text = courtItem.courtLocation
+            Glide.with(itemView.context)
+                .load(courtItem.imageUrl)
+                .placeholder(R.drawable.court)
+                .into(courtImage)
         }
 
     }

@@ -89,6 +89,21 @@ class UserRepository @Inject constructor(db : FirebaseDatabase) {
         }
     }
 
+    fun updateUserRate(userId: String, shotSpeed: String, playerSpeed: String, playStyle : String): Boolean {
+        try {
+            val updates = mapOf(
+                "power" to shotSpeed,
+                "speed" to playerSpeed,
+                "playStyle" to playStyle
+            )
+            userRef.child(userId).updateChildren(updates)
+            return true
+        } catch (e: Exception) {
+            Log.e("TAG", "updateUserImage: error $e",)
+            return false
+        }
+    }
+
          suspend fun deleteUser(id: String) : Boolean{
              try {
                  userRef.child(id).removeValue().await()
