@@ -1,8 +1,18 @@
 package com.example.padellexadmin.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.padellex.viewContainer.CustomWeekDayBinder
 import com.example.padellexadmin.Adapters.OnTimeClickListener
 import com.example.padellexadmin.Adapters.TimeAdapter
@@ -44,15 +54,15 @@ class CourtDetailsActivity : AppCompatActivity() {
         viewModel.generateTimeSlotsForDate(currentDate.toString(),courtData.id)
 
         binding.editFab.setOnClickListener {
-            val bottomSheetFragment = BottomSheetFragment(courtName = courtData.courtName , courtPrice = courtData.courtPrice.toString() , courtLocation = courtData.courtLocation , courtLongitude = courtData.longitude.toString() , courtLatitude = courtData.latitude.toString()){ courtName, courtLocation, courtPrice, courtLatitude, courtLongitude ->
+            val bottomSheetFragment = BottomSheetFragment(courtData, courtId = courtData.id){ courtName, courtLocation, courtPrice, courtLatitude, courtLongitude ->
                 viewModel.updateCourt(CourtData(courtData.id,courtName,courtPrice.toDouble(),courtLocation,false,courtLatitude.toDouble(),courtLongitude.toDouble()))
                 viewModel.getCourtDetails(courtData.id)
             }
             bottomSheetFragment.show(supportFragmentManager,"BottomSheetFragment")
         }
 
-
     }
+
 
     fun initCalendar(){
         val firstDayOfWeek = currentDate.dayOfWeek
@@ -74,10 +84,15 @@ class CourtDetailsActivity : AppCompatActivity() {
         binding.weekCalendarView.dayBinder = weekDayBinder
     }
 
+
+
+
+
     private fun observeViewModel(){
         viewModel.list.observe(this){timeSlots->
             adapter.updateAdapter(timeSlots)
         }
+
 
         viewModel.courtDataSuccess.observe(this){courtDetails->
             if (courtDetails != null) {
@@ -85,6 +100,10 @@ class CourtDetailsActivity : AppCompatActivity() {
                 binding.courtNameTv.text = courtData.courtName
                 binding.courtLocationTv.text = courtData.courtLocation
                 binding.courtPriceTv.text = courtData.courtPrice.toString()
+                Glide.with(this@CourtDetailsActivity)
+                    .load(courtData.imageUrl)
+                    .placeholder(R.drawable.court)
+                    .into(binding.courtImage)
             }
         }
     }

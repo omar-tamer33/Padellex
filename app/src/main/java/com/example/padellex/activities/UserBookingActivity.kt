@@ -2,12 +2,12 @@ package com.example.padellex.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.padellex.Adapters.OnDeleteClickListener
 import com.example.padellex.Adapters.UserBookingAdapter
+import com.example.padellex.Fragments.CustomAlertDialog
 import com.example.padellex.R
 import com.example.padellex.databinding.ActivityUserBookingBinding
 import com.example.padellex.model.UserBookingItem
@@ -39,7 +39,8 @@ class UserBookingActivity : AppCompatActivity() {
         binding.userBookingRv.adapter = adapter
         adapter.deleteBtnClickListener = object : OnDeleteClickListener {
             override fun onDeleteClick(userBookingItem: UserBookingItem, position: Int) {
-                viewModel.onDeleteClick(userBookingItem)
+                val count = viewModel.getCurrentStrikesCount(userId)
+                warningAlertDialog(userBookingItem , count)
             }
         }
         initCalendar()
@@ -63,6 +64,12 @@ class UserBookingActivity : AppCompatActivity() {
             }
         }
         binding.weekCalendarView.dayBinder = weekDayBinder
+    }
+
+    private fun warningAlertDialog(userBookingItem: UserBookingItem, strikeCount: Int?){
+        CustomAlertDialog(message = "Three cancellations lead to account deletion.\nYou’re currently at $strikeCount/3"){
+            viewModel.onDeleteClick(userBookingItem)
+        }.show(supportFragmentManager,"warningDialog")
     }
 
     private fun showEmptyAnimation(){

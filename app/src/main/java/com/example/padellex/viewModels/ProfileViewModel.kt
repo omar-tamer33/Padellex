@@ -19,7 +19,7 @@ import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val userBookingRepository: UserBookingRepository , private val userRepository: UserRepository , private val cloudinary: Cloudinary , private val auth : FirebaseAuth) : ViewModel() {
+class ProfileViewModel @Inject constructor(private val userRepository: UserRepository , private val cloudinary: Cloudinary , private val auth : FirebaseAuth, private val userBookingRepository: UserBookingRepository) : ViewModel() {
     val success = MutableLiveData<Boolean>()
     val isImageAdded = MutableLiveData<Boolean>()
     val url = MutableLiveData<String>()
@@ -52,6 +52,8 @@ class ProfileViewModel @Inject constructor(private val userBookingRepository: Us
 
     fun deleteAccount(userId: String){
         viewModelScope.launch {
+            deleteOldImage(userId)
+            userBookingRepository.deleteAllUserBooking(userId)
             auth.currentUser?.delete()?.await()
             userRepository.deleteUser(userId)
         }

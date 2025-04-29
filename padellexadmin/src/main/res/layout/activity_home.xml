@@ -43,7 +43,8 @@
            app:menu="@menu/bottom_nav_bar_menu"
            app:labelVisibilityMode="unlabeled"
            app:itemActiveIndicatorStyle="@null"
-           app:itemIconTint="@color/on_item_select_bottom_nav"
+           app:itemTextColor="@drawable/nav_on_select_color"
+           app:itemIconTint="@drawable/nav_on_select_color"
            android:background="@color/transparent"
            />
 

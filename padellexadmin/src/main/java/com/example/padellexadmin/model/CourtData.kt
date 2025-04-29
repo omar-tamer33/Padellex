@@ -11,4 +11,5 @@ data class CourtData(
     var courtLocation : String = "",
     var courtAvailability : Boolean = false,
     var latitude : Double? = 0.0,
-    var longitude : Double? = 0.0): Parcelable
+    var longitude : Double? = 0.0,
+    var imageUrl : String? = ""): Parcelable

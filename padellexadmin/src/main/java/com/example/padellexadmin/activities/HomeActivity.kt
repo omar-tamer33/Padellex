@@ -52,8 +52,8 @@ class HomeActivity : AppCompatActivity() {
         }
 
         binding.addFab.setOnClickListener {
-            val bottomSheetFragment = BottomSheetFragment(){courtName,courtLocation,courtPrice,courtLatitude,courtLongitude->
-                val id = UUID.randomUUID().toString()
+            val id = UUID.randomUUID().toString()
+            val bottomSheetFragment = BottomSheetFragment(null,courtId = id){courtName,courtLocation,courtPrice,courtLatitude,courtLongitude->
                 viewModel.addCourtInDatabase(
                     courtName,
                     courtLocation,

@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/user_booking_item"/>
+        tools:listitem="@layout/user_booking_item"
+        android:layout_margin="8dp"
+        />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/emptyAnimation"

@@ -19,6 +19,7 @@ class CustomAlertDialog(val message : String , val onConfirmClick : () -> Unit) 
         val dialog = AlertDialog.Builder(requireContext()).setView(view).create()
         confirmBtn.setOnClickListener {
             onConfirmClick()
+            dialog.dismiss()
         }
         cancelBtn.setOnClickListener {
             dialog.dismiss()

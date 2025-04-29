@@ -40,4 +40,8 @@
     <string name="new_password">New password</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="hello">Hello,</string>
+    <string name="welcome_to_padellex_community">Welcome to Padellex community</string>
+    <string name="your_skills">Your Skills Level</string>
+    <string name="review_skill">Review Skill</string>
 </resources>
