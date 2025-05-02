@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/bg_color"
+    android:padding="16dp"
+    >
+<com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/addUserTl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cursorColor="@color/purple"
+    app:boxStrokeColor="@color/purple"
+    app:boxCornerRadiusBottomEnd="22dp"
+    app:boxCornerRadiusBottomStart="22dp"
+    app:boxCornerRadiusTopStart="22dp"
+    app:boxCornerRadiusTopEnd="22dp"
+    app:boxBackgroundColor="@color/white"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/recyclerView"
+    app:layout_constraintEnd_toStartOf="@id/addBtn"
+    >
+    <EditText
+        android:id="@+id/addUserEt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="phone"
+        app:circularflow_radiusInDP="25dp"
+        android:hint="@string/enter_user_phone"
+        />
+</com.google.android.material.textfield.TextInputLayout>
+
+
+    <ImageView
+        android:id="@+id/addBtn"
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_search"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="@id/addUserTl"
+        app:layout_constraintTop_toTopOf="@id/addUserTl"
+        app:layout_constraintBottom_toBottomOf="@id/addUserTl"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_chats"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addUserTl"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

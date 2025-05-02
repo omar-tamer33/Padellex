@@ -44,4 +44,7 @@
     <string name="welcome_to_padellex_community">Welcome to Padellex community</string>
     <string name="your_skills">Your Skills Level</string>
     <string name="review_skill">Review Skill</string>
+    <string name="search">Search</string>
+    <string name="enter_user_phone">Enter User Phone</string>
+    <string name="send_a_message">Send a message ...</string>
 </resources>
