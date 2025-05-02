@@ -1,5 +1,8 @@
 package com.example.padellex.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 data class UserInfo(val id : String? = null ,
                     val firstName : String = "",
                     val lastName : String = "",
