@@ -1,6 +1,7 @@
 package com.example.padellex.Fragments
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.padellex.R
+import com.example.padellex.activities.ChatbotActivity
+import com.example.padellex.activities.HomeActivity
+import com.example.padellex.activities.UserBookingActivity
 import com.example.padellex.databinding.FragmentHomeBinding
 import com.example.padellex.viewModels.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -70,6 +74,23 @@ class HomeFragment : Fragment() {
             checkPermissionGranted(storagePermission)
         }
 
+        binding.chatBotBtn.setOnClickListener {
+            val intent = Intent(requireContext(),ChatbotActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.myBookingCard.setOnClickListener {
+            val intent = Intent(requireContext(),UserBookingActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.userChatCard.setOnClickListener {
+            goToChats()
+        }
+
+        binding.bookingCard.setOnClickListener {
+            goToCourts()
+        }
     }
 
     private fun updateVideo() {
@@ -119,9 +140,9 @@ class HomeFragment : Fragment() {
                 val imageUrl = userInfo.imageUrl
 
                 binding.userNameTv.text = "$firstName $lastName"
-                binding.playStyleTv.text = "${userInfo.playStyle}\nPLAYSTYLE"
-                binding.speedTv.text = "${userInfo.speed}\nSpeed"
-                binding.powerTv.text = "${userInfo.power}\nPower"
+                binding.playStyleTv.text = userInfo.playStyle
+                binding.speedTv.text = userInfo.speed
+                binding.powerTv.text = userInfo.power
                 if (isAdded) {
                     Glide.with(requireContext())
                         .load(imageUrl)
@@ -138,9 +159,19 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.playerRate.observe(viewLifecycleOwner){
-            binding.playStyleTv.text = "${it?.get("playStyle")}\nPLAYSTYLE"
-            binding.speedTv.text = "${it?.get("playerSpeed")}\nSpeed"
-            binding.powerTv.text = "${it?.get("shootSpeed")}\nPower"
+            binding.playStyleTv.text = it?.get("playStyle")
+            binding.speedTv.text = it?.get("playerSpeed")
+            binding.powerTv.text = it?.get("shootSpeed")
         }
+    }
+
+    private fun goToChats() {
+        (requireActivity() as? HomeActivity)
+            ?.changeFragment(ChatsFragment::class.java, R.id.chats)
+    }
+
+    private fun goToCourts() {
+        (requireActivity() as? HomeActivity)
+            ?.changeFragment(CourtsFragment::class.java, R.id.booking)
     }
 }

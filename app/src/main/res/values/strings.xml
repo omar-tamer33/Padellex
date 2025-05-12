@@ -47,4 +47,12 @@
     <string name="search">Search</string>
     <string name="enter_user_phone">Enter User Phone</string>
     <string name="send_a_message">Send a message ...</string>
+    <string name="chatbot">Chat Bot</string>
+    <string name="chat_bot">Chat Bot</string>
+    <string name="book_court">Book Court</string>
+    <string name="my_bookings">My Bookings</string>
+    <string name="speed">Speed</string>
+    <string name="playstyle">PLAYSTYLE</string>
+    <string name="user_chat">User Chat</string>
+    <string name="power">Power</string>
 </resources>
